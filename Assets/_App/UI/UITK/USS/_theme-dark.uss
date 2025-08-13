@@ -1,0 +1,26 @@
+/* UI Toolkit–safe theme: exact colors, no CSS variables */
+
+Label, .unity-label, .text, .text-s, .text-m, .text-l, .text-xl, .text-sb {
+  -unity-font-definition: url("project://database/Assets/_App/UI/UITK/Fonts/Inter-VariableFont SDF.asset");
+  color: #f1f1f2; /* base text */
+}
+
+/* sizes */
+.text-s  { font-size: 11px; }
+.text-m  { font-size: 13px; }
+.text-l  { font-size: 16px; }
+.text-xl { font-size: 42px; }  /* matches the big “Welcome Back” */
+.text-sb { font-size: 13px; }
+
+/* generic card */
+.card {
+  background-color: #1A1821;   /* panel */
+  border-radius: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.title { font-size: 16px; }
+.hint  { color: #9ba1a6; font-size: 11px; }

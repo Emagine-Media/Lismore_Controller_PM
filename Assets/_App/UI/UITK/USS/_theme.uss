@@ -1,0 +1,105 @@
+/* ==== Base colors & typography (no CSS vars) ==== */
+.app-root {
+  background-color: #0e1013;
+  color: #e7eaf0;
+  -unity-font-definition: url("project://database/Assets/_App/UI/UITK/Fonts/Lato SDF.asset");
+
+}
+/* Base typography */
+.app-root { font-size: 18px; }        /* global default */
+Label { font-size: 16px; }            /* typical body */
+.kpi { font-size: 32px; -unity-font-style: bold; }
+Button, TextField, IntegerField, DropdownField, Toggle, Slider { font-size: 16px; }
+
+/* Text helpers */
+.muted { color: #a9b2c0; }
+.kpi   { font-size: 28px; -unity-font-style: bold; }
+
+/* Buttons */
+Button {
+  color: #e7eaf0;
+  background-color: #22252d;
+  border-top-left-radius: 8px; border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
+  border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;
+  border-top-color: #2b2f38; border-right-color: #2b2f38;
+  border-bottom-color: #2b2f38; border-left-color: #2b2f38;
+}
+.segment-selected {
+  background-color: #4fa3ff;
+  color: #ffffff;
+}
+
+/* Inputs */
+TextField, IntegerField, DropdownField {
+  color: #e7eaf0;
+  background-color: #171a20;
+  border-top-left-radius: 8px; border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
+  border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;
+  border-top-color: #2b2f38; border-right-color: #2b2f38;
+  border-bottom-color: #2b2f38; border-left-color: #2b2f38;
+  padding-left: 8px; padding-right: 8px; padding-top: 6px; padding-bottom: 6px;
+}
+Toggle { color: #e7eaf0; }
+
+/* Slider */
+Slider {
+  color: #e7eaf0;
+  background-color: #171a20;
+  border-top-left-radius: 8px; border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
+  padding-left: 8px; padding-right: 8px; padding-top: 6px; padding-bottom: 6px;
+}
+
+/* Containers */
+.topbar,
+.nav-rail,
+.card,
+.section {
+  background-color: #171a20;
+  /* rounded corners set in _layout.uss; keep consistent tone here */
+}
+
+/* Accents / status */
+.badge {
+  background-color: #4fa3ff;
+  color: #ffffff;
+}
+.status-dot { background-color: #53d86a; }   /* good */
+.status-warn { background-color: #f5a524; }  /* warn */
+.status-bad  { background-color: #ff4d4f; }  /* error */
+
+/* Lists / scroll */
+.list {
+  background-color: #15171d;
+}
+
+/* Log view */
+.log-view {
+  color: #e7eaf0;
+}
+
+/* Optional light theme — toggle by adding class "light" to root element later */
+.light {
+  background-color: #f7f8fb;
+  color: #121318;
+}
+.light .topbar,
+.light .nav-rail,
+.light .card,
+.light .section,
+.light .list {
+  background-color: #ffffff;
+}
+.light .muted { color: #5d6570; }
+.light Button {
+  color: #121318;
+  background-color: #eef0f5;
+  border-top-color: #d8dbe2; border-right-color: #d8dbe2;
+  border-bottom-color: #d8dbe2; border-left-color: #d8dbe2;
+}
+.light .badge { background-color: #2967ff; color: #ffffff; }
+.light .status-dot { background-color: #2ab65c; }
+.light .status-warn { background-color: #f1a11a; }
+.light .status-bad { background-color: #e23e45; }

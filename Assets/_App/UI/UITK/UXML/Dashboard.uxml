@@ -1,0 +1,144 @@
+<UXML xmlns="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_App/UI/UITK/USS/_theme-dark.uss?fileID=7433441132597879392&amp;guid=2e8cd1831193ed248bdd40d30dc813dd&amp;type=3#_theme-dark" />
+    <Style src="project://database/Assets/_App/UI/UITK/USS/dashboard.uss?fileID=7433441132597879392&amp;guid=25bb66d0badb81444a4ef82e14d06f21&amp;type=3#dashboard" />
+    <VisualElement class="app-root" style="overflow: visible;">
+        <VisualElement class="left-col">
+            <VisualElement class="topbar card">
+                <Label text="Onze" class="brand text-sb" />
+                <VisualElement class="search ml-12" />
+                <VisualElement class="menu-dot ml-12" />
+            </VisualElement>
+            <VisualElement class="welcome card mt-20">
+                <Label text="Hey Nila!" class="eyebrow text-m" />
+                <Label text="Welcome Back" class="headline text-xl mt-8" />
+                <VisualElement class="server-req-pill mt-10">
+                    <Label text="Server Requests" class="text-sb" />
+                    <VisualElement class="switch" />
+                </VisualElement>
+            </VisualElement>
+            <VisualElement class="issues card mt-20">
+                <VisualElement class="card-header">
+                    <Label text="Issue Detected" class="title text-l" />
+                    <VisualElement class="icon-ghost" />
+                </VisualElement>
+                <VisualElement class="issue-row mt-12">
+                    <VisualElement class="issue-icon" />
+                    <VisualElement class="issue-copy ml-12">
+                        <Label text="User issue" class="row-title" />
+                        <Label text="The numbers of user drops" class="row-sub mt-2" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-active mt-12">
+                    <VisualElement class="issue-icon danger" />
+                    <VisualElement class="issue-copy ml-12">
+                        <Label text="Break issue" class="row-title" />
+                        <Label text="Fear of Hacking account issue" class="row-sub danger mt-2" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row mt-12">
+                    <VisualElement class="issue-icon" />
+                    <VisualElement class="issue-copy ml-12">
+                        <Label text="Memory issue" class="row-title" />
+                        <Label text="The free space is approaching 0" class="row-sub mt-2" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row mt-12">
+                    <VisualElement class="issue-icon" />
+                    <VisualElement class="issue-copy ml-12">
+                        <Label text="Reports and order" class="row-title" />
+                        <Label text="Received 12 Risk reports" class="row-sub mt-2" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-footer mt-6">
+                    <VisualElement class="addon-icon" />
+                    <Label text="Add to alerts" class="addto ml-12" />
+                </VisualElement>
+            </VisualElement>
+        </VisualElement>
+        <VisualElement class="center-col" style="flex-direction: row-reverse; align-items: flex-start; justify-content: flex-end;">
+            <VisualElement class="charts card">
+                <VisualElement class="chart-block">
+                    <VisualElement class="card-header">
+                        <Label text="Data Activity" class="title text-l" />
+                        <VisualElement class="icon-ghost" />
+                    </VisualElement>
+                    <VisualElement class="stat-row">
+                        <Label text="498" class="stat-big" />
+                        <Label text="Discovered assets" class="stat-sub mt-2" />
+                    </VisualElement>
+                    <VisualElement class="chart-panel mt-6">
+                        <VisualElement class="bar-row">
+                            <VisualElement class="bar bar-amber" style="height: 48px;" />
+                            <VisualElement class="bar bar-amber ml-8" style="height: 64px;" />
+                            <VisualElement class="bar bar-amber ml-8" style="height: 72px;" />
+                            <VisualElement class="bar bar-amber ml-8" style="height: 52px;" />
+                            <VisualElement class="bar bar-amber ml-8" style="height: 60px;" />
+                            <VisualElement class="bar bar-amber ml-8" style="height: 92px;" />
+                            <VisualElement class="bar bar-amber ml-8" style="height: 40px;" />
+                            <VisualElement class="bar bar-amber ml-8" style="height: 96px;" />
+                            <VisualElement class="bar bar-amber ml-8" style="height: 82px;" />
+                        </VisualElement>
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="chart-block ml-20">
+                    <VisualElement class="card-header">
+                        <Label text="Data Activity" class="title text-l" />
+                        <VisualElement class="icon-ghost" />
+                    </VisualElement>
+                    <VisualElement class="stat-row">
+                        <Label text="263" class="stat-big" />
+                        <Label text="Entry Point Breakdown" class="stat-sub mt-2" />
+                    </VisualElement>
+                    <VisualElement class="chart-panel mt-6">
+                        <VisualElement class="bar-row">
+                            <VisualElement class="bar bar-mint" style="height: 32px;" />
+                            <VisualElement class="bar bar-mint ml-8" style="height: 44px;" />
+                            <VisualElement class="bar bar-mint ml-8" style="height: 56px;" />
+                            <VisualElement class="bar bar-mint ml-8" style="height: 70px;" />
+                            <VisualElement class="bar bar-mint ml-8" style="height: 62px;" />
+                            <VisualElement class="bar bar-mint ml-8" style="height: 96px;" />
+                            <VisualElement class="bar bar-mint ml-8" style="height: 84px;" />
+                            <VisualElement class="bar bar-mint ml-8" style="height: 64px;" />
+                            <VisualElement class="bar bar-mint ml-8" style="height: 76px;" />
+                        </VisualElement>
+                    </VisualElement>
+                </VisualElement>
+            </VisualElement>
+        </VisualElement>
+        <VisualElement class="right-col">
+            <VisualElement class="profile card">
+                <VisualElement class="avatar-wrap">
+                    <VisualElement class="avatar" />
+                </VisualElement>
+                <Label text="Ms.Nila" class="name text-m mt-8" />
+                <Label text="Admin" class="role mt-8" />
+            </VisualElement>
+            <VisualElement class="reports card mt-24">
+                <Label text="My Device Reports" class="title text-l" />
+                <Label text="Viewing last 7 days chart" class="hint mt-12" />
+                <VisualElement class="linechart mt-12">
+                    <VisualElement class="line line-1" />
+                    <VisualElement class="dot d6" />
+                </VisualElement>
+                <VisualElement class="quick-grid mt-12">
+                    <VisualElement class="qbtn">
+                        <Label text="Routers" />
+                    </VisualElement>
+                    <VisualElement class="qbtn hstack-12">
+                        <Label text="Memory" />
+                    </VisualElement>
+                    <VisualElement class="qbtn hstack-12">
+                        <Label text="Scanning" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="progress mt-12">
+                    <Label text="System scan" class="hint" />
+                    <VisualElement class="track mt-6">
+                        <VisualElement class="fill" style="width: 69%;" />
+                        <VisualElement class="wave" />
+                    </VisualElement>
+                </VisualElement>
+            </VisualElement>
+        </VisualElement>
+    </VisualElement>
+</UXML>

@@ -1,0 +1,171 @@
+.app-root { 
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+  min-height: 0;
+  width:100%; height:100%; 
+}
+
+/* Top bar */
+.topbar {
+  height: 72px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  min-width: 0;
+}
+
+/* Simple utility classes */
+.row { display: flex; align-items: center; min-width: 0; }
+.space-r-12 { margin-right: 12px; }
+.space-b-12 { margin-bottom: 12px; }
+
+/* Badge */
+.badge {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-top-left-radius: 999px;
+  border-top-right-radius: 999px;
+  border-bottom-left-radius: 999px;
+  border-bottom-right-radius: 999px;
+}
+
+/* Body (nav + content) */
+.body {
+  display: flex;
+  padding: 20px;
+  flex-grow: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Nav rail */
+.nav-rail {
+  width: 280px;
+  min-width: 240px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Content column */
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+  margin-left: 16px;
+}
+
+/* KPI cards – stack (no wrap for now) */
+.cards-grid {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.card {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 20px;
+  min-width: 0;
+}
+.card-margin-right { margin-right: 12px; }
+
+/* Sections */
+.section {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 20px;
+  min-height: 180px;
+  margin-top: 16px;
+  min-width: 0;
+}
+
+/* Header rows */
+.hrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  min-width: 0;
+}
+
+/* Status dot */
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Scrollable list container (ScrollView controls scrollbars) */
+.list {
+  max-height: 380px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Toolbars / buttons */
+.toolbar { display: flex; min-width: 0; }
+.toolbar-gap-12 .tool { margin-right: 12px; }
+.button-pad { padding-top: 8px; padding-bottom: 8px; padding-left: 12px; padding-right: 12px; }
+
+/* Segmented control */
+.segment {
+  display: flex;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-color: #2a2a2a;
+  border-right-color: #2a2a2a;
+  border-bottom-color: #2a2a2a;
+  border-left-color: #2a2a2a;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  min-width: 0;
+}
+
+/* Field rows */
+.field-row {
+  display: flex;
+  min-width: 0;
+  margin-left: 12px;
+}
+.field { min-width: 240px; flex-grow: 1; }
+
+/* Log view (use scroll, not auto) */
+.log-view {
+  font-size: 14px;
+  padding: 10px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  height: 220px;
+  overflow: scroll;
+}

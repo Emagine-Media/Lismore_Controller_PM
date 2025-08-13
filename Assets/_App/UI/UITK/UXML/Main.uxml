@@ -1,0 +1,153 @@
+<UXML xmlns="UnityEngine.UIElements">
+  <Style src="project://database/Assets/_App/UI/UITK/USS/_theme.uss" />
+  <Style src="project://database/Assets/_App/UI/UITK/USS/_layout.uss" />
+
+  <VisualElement class="app-root">
+    <!-- Top Bar -->
+    <VisualElement class="topbar">
+      <VisualElement class="row left">
+        <Image name="logo" class="space-r-12" src="project://database/Assets/_App/UI/UITK/Icons/logo.png" />
+        <Label class="space-r-12" text="Lismore Controller" />
+        <VisualElement class="badge">
+          <Label text="UI Toolkit Demo" />
+        </VisualElement>
+      </VisualElement>
+
+      <VisualElement class="row right">
+        <VisualElement class="status-dot space-r-12" name="netStatus"/>
+        <Label class="muted" name="clockLabel" text="12:34" />
+      </VisualElement>
+    </VisualElement>
+
+    <!-- Body -->
+    <VisualElement class="body">
+      <!-- Nav Rail -->
+      <VisualElement class="nav-rail">
+        <Label class="muted space-b-12" text="Navigation" />
+        <VisualElement class="toolbar toolbar-gap-12 space-b-12">
+          <Button class="tool button-pad" name="tabOverview" text="Overview" />
+          <Button class="tool button-pad" name="tabDevices"  text="Devices" />
+          <Button class="tool button-pad" name="tabCommands" text="Commands" />
+          <Button class="tool button-pad" name="tabLogs"     text="Logs" />
+          <Button class="tool button-pad" name="tabSettings" text="Settings" />
+        </VisualElement>
+
+        <Foldout class="space-b-12" text="Filters" value="true">
+          <Toggle name="fltOnline"  text="Online"  value="true"/>
+          <Toggle name="fltIdle"    text="Idle"    value="true"/>
+          <Toggle name="fltPlaying" text="Playing" value="true"/>
+        </Foldout>
+
+        <Foldout text="Quick Actions">
+          <Button class="button-pad space-b-12" name="qaPing" text="Ping All"/>
+          <Button class="button-pad"            name="qaStop" text="Stop All"/>
+        </Foldout>
+      </VisualElement>
+
+      <!-- Main Content -->
+      <VisualElement class="content">
+        <!-- KPI Cards -->
+        <VisualElement class="cards-grid">
+          <VisualElement class="card card-margin-right">
+            <VisualElement class="hrow">
+              <Label text="Connected" />
+              <VisualElement class="status-dot" />
+            </VisualElement>
+            <Label class="kpi" text="12"/>
+            <Label class="muted" text="Headsets online"/>
+          </VisualElement>
+
+          <VisualElement class="card card-margin-right">
+            <VisualElement class="hrow">
+              <Label text="In Session" />
+              <VisualElement class="status-dot status-warn" />
+            </VisualElement>
+            <Label class="kpi" text="3"/>
+            <Label class="muted" text="Playing now"/>
+          </VisualElement>
+
+          <VisualElement class="card">
+            <VisualElement class="hrow">
+              <Label text="Errors" />
+              <VisualElement class="status-dot status-bad" />
+            </VisualElement>
+            <Label class="kpi" text="0"/>
+            <Label class="muted" text="Last 60 mins"/>
+          </VisualElement>
+        </VisualElement>
+
+        <!-- Devices + Commands -->
+        <VisualElement class="section">
+          <VisualElement class="hrow">
+            <Label text="Devices" />
+            <VisualElement class="segment">
+              <Button class="button-pad segment-selected" name="segAll" text="All"/>
+              <Button class="button-pad" name="segSel" text="Selected"/>
+              <Button class="button-pad" name="segGroup" text="Group"/>
+            </VisualElement>
+          </VisualElement>
+
+          <ScrollView class="list" name="deviceList" vertical-scroller-visibility="Auto" horizontal-scroller-visibility="Hidden">
+            <!-- Placeholder rows -->
+            <VisualElement class="hrow">
+              <Label text="H01 – Lobby" />
+              <Label class="muted" text="IDLE"/>
+            </VisualElement>
+            <VisualElement class="hrow">
+              <Label text="H02 – Bay A" />
+              <Label class="muted" text="PLAYING"/>
+            </VisualElement>
+          </ScrollView>
+
+          <VisualElement class="hrow">
+            <VisualElement class="toolbar toolbar-gap-12">
+              <Button class="tool button-pad" name="cmdPlay"  text="Play"/>
+              <Button class="tool button-pad" name="cmdPause" text="Pause"/>
+              <Button class="tool button-pad" name="cmdStop"  text="Stop"/>
+              <Button class="tool button-pad" name="cmdSync"  text="Sync"/>
+            </VisualElement>
+
+            <VisualElement class="field-row">
+              <DropdownField class="field" name="movieDropdown" />
+              <DropdownField class="field" name="langDropdown" />
+            </VisualElement>
+          </VisualElement>
+        </VisualElement>
+
+        <!-- Logs -->
+        <VisualElement class="section">
+          <VisualElement class="hrow">
+            <Label text="Logs" />
+            <VisualElement class="toolbar toolbar-gap-12">
+              <Button class="tool button-pad" name="logClear"  text="Clear"/>
+              <Button class="tool button-pad" name="logExport" text="Export"/>
+            </VisualElement>
+          </VisualElement>
+
+          <Label class="log-view" name="logText"
+                 text="[12:34:02] App started
+[12:34:04] Network connected : 192.168.1.50:11000
+[12:34:06] H01 HELLO
+[12:34:07] WELCOME → H01" />
+        </VisualElement>
+
+        <!-- Settings -->
+        <VisualElement class="section">
+          <VisualElement class="hrow">
+            <Label text="Settings" />
+            <VisualElement class="toolbar">
+              <Toggle name="togTheme" text="Dark Mode" value="true" />
+            </VisualElement>
+          </VisualElement>
+
+          <VisualElement class="field-row">
+            <TextField    class="field" name="ctlId" label="Controller ID" value="CTRL1"/>
+            <TextField    class="field" name="ip"    label="Server IP"     value="192.168.1.50"/>
+            <IntegerField class="field" name="port"  label="Port"          value="11000"/>
+            <Slider       class="field" name="hb"    label="Heartbeat (s)" low-value="1" high-value="10" value="3"/>
+          </VisualElement>
+        </VisualElement>
+      </VisualElement>
+    </VisualElement>
+  </VisualElement>
+</UXML>

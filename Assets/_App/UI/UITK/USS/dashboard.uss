@@ -1,0 +1,289 @@
+/* =========================
+   Parser-safe base layout
+   (no >, +, :first-child, no box-shadow, no CSS vars)
+   ========================= */
+
+.app-root {
+  background-color: #121018;
+  padding-left: 28px;
+  padding-right: 28px;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  
+}
+
+.left-col  { width: 340px; }
+.center-col{ width: 520px; }
+.right-col { width: 340px; }
+
+/* ---------- topbar + welcome ---------- */
+.topbar {
+  align-items: center;
+  flex-direction: row;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.brand { font-size: 14px; }
+.search { flex-grow: 1; height: 36px; background-color: #1E1C25; border-radius: 12px; }
+.menu-dot { width: 8px; height: 8px; border-radius: 99px; background-color: #1E1C25; }
+
+.welcome { padding: 24px; }
+
+.eyebrow { color: #9ba1a6; font-size: 20px; }
+.headline { font-size: 42px; }
+.server-req-pill {
+  height: 40px; background-color: #1E1C25;
+  border-radius: 20px; padding-left: 12px; padding-right: 12px;
+  align-items: center; justify-content: space-between; flex-direction: row;
+}
+.switch { width: 44px; height: 24px; border-radius: 12px; background-color: #2d2a36; }
+
+/* ---------- issues ---------- */
+.card-header { flex-direction: row; align-items: center; justify-content: space-between; }
+.icon-ghost { width: 16px; height: 16px; border-radius: 8px; background-color: #2b2933; }
+
+.issue-row {
+  height: 56px; border-radius: 14px; background-color: #1d1b23;
+  padding-left: 14px; padding-right: 14px;
+  flex-direction: row; align-items: center;
+  border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;
+  border-left-color: #2a2833; border-right-color: #2a2833; border-top-color: #2a2833; border-bottom-color: #2a2833;
+}
+.issue-row.is-active { border-left-color: #346a44; border-right-color: #346a44; border-top-color: #346a44; border-bottom-color: #346a44; }
+.issue-row.is-error  { border-left-color: #6a3e34; border-right-color: #6a3e34; border-top-color: #6a3e34; border-bottom-color: #6a3e34; }
+
+.issue-icon { width: 20px; height: 20px; border-radius: 10px; background-color: #2a2833; }
+.issue-icon.active { background-color: #203a24; }
+.issue-icon.error { background-color: #3a2220; }
+
+.issue-copy { flex-direction: row; align-items:center; }
+.row-title { font-size: 13px; }
+.row-sub { font-size: 11px; color: #9ba1a6; }
+.row-sub.active { color: #88ff98; }
+.row-sub.error { color: #ff9488; }
+.row-sub.disconnected (color: #a16cb9;)
+
+/* Headset name */
+.issue-copy .row-title {
+    margin-right: 8px; /* small gap before status */
+}
+
+/* Status text */
+.issue-copy .row-sub {
+    font-size: 11px;
+}
+
+.issue-footer {
+  height: 52px; background-color: #1b1921;
+  border-radius: 26px; flex-direction: row; align-items: center; padding-left: 16px; padding-right: 16px;
+}
+.disconnected-icon { width: 18px; height: 18px; border-radius: 9px; background-color: #3a2d40; }
+.addto { color: #cfd0d3; }
+
+/* ---------- charts ---------- */
+.charts { flex-direction: row; padding: 18px; }
+
+.chart-block { flex: 1; background-color: #1E1C25; border-radius: 16px; padding: 18px; }
+
+.stat-big { font-size: 28px; }
+.stat-sub { font-size: 11px; color: #9ba1a6; }
+
+.chart-panel { background-color: #1b1921; border-radius: 14px; padding: 14px; }
+
+.bar-row { height: 110px; align-items: flex-end; justify-content: space-between; flex-direction: row; }
+.bar { width: 18px; border-top-left-radius: 8px; border-top-right-radius: 8px; background-color: #444444; }
+.bar-amber { background-color: #f3c46c; }
+.bar-mint  { background-color: #62e4c8; }
+
+/* Heights for bars that were inline styles */
+.h-32 { height: 32px; }
+.h-40 { height: 40px; }
+.h-44 { height: 44px; }
+.h-48 { height: 48px; }
+.h-52 { height: 52px; }
+.h-56 { height: 56px; }
+.h-60 { height: 60px; }
+.h-62 { height: 62px; }
+.h-64 { height: 64px; }
+.h-70 { height: 70px; }
+.h-72 { height: 72px; }
+.h-76 { height: 76px; }
+.h-82 { height: 82px; }
+.h-84 { height: 84px; }
+.h-92 { height: 92px; }
+.h-96 { height: 96px; }
+
+/* ---------- compose ---------- */
+.compose { padding: 16px; position: relative; }
+.compose-field { height: 48px; background-color: #1E1C25; border-radius: 24px; }
+.compose-send {
+  width: 36px; height: 36px; border-radius: 18px; background-color: #2a2833;
+  position: absolute; right: 24px; top: 50%;
+}
+
+/* ---------- profile / right column ---------- */
+.profile { align-items: center; padding: 20px; }
+.avatar-wrap {
+  width: 104px; height: 104px; border-radius: 52px;
+  border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;
+  border-left-color: #a16cb9; border-right-color: #a16cb9; border-top-color: #a16cb9; border-bottom-color: #a16cb9;
+  align-items: center; justify-content: center;
+}
+.avatar { width: 90px; height: 90px; border-radius: 45px; background-color: #3a3644; }
+.name { font-size: 16px; }
+.role { font-size: 11px; color: #9ba1a6; }
+
+.reports { }
+.linechart { height: 120px; background-color: #1b1921; border-radius: 14px; position: relative; }
+.line { position: absolute; left: 10px; right: 10px; top: 60px; height: 2px; background-color: #8ea0ff; }
+.dot { width: 8px; height: 8px; border-radius: 4px; background-color: #8ea0ff; }
+.dot.d6 { position: absolute; left: 68%; top: 54px; }
+
+.quick-grid { flex-direction: row; }
+.qbtn { flex: 1; height: 44px; background-color: #1E1C25; border-radius: 12px; align-items: center; justify-content: center; }
+.qbtn Label { font-size: 12px; color: #cfd0d3; }
+
+.progress { }
+.track { height: 12px; background-color: #2a2833; border-radius: 6px; position: relative; }
+.fill { position: absolute; left: 0; top: 0; bottom: 0; background-color: #88ff98; }
+/* width utilities (instead of inline style) */
+.w-69p { width: 69%; }
+.wave { position: absolute; left: 40%; width: 120px; top: 0; bottom: 0; background-color: rgba(0,0,0,0.2); border-radius: 999px; }
+
+/* =========================
+   Utility spacing classes
+   ========================= */
+
+/* margins top */
+.mt-2  { margin-top: 2px; }
+.mt-6  { margin-top: 6px; }
+.mt-8  { margin-top: 8px; }
+.mt-10 { margin-top: 10px; }
+.mt-12 { margin-top: 12px; }
+.mt-20 { margin-top: 20px; }
+.mt-24 { margin-top: 24px; }
+
+/* margins left */
+.ml-6  { margin-left: 6px; }
+.ml-8  { margin-left: 8px; }
+.ml-12 { margin-left: 12px; }
+.ml-20 { margin-left: 20px; }
+
+/* vertical rhythm for stacks (apply to each child) */
+.stack-20 { margin-top: 20px; }
+.stack-24 { margin-top: 24px; }
+.stack-10 { margin-top: 10px; }
+
+/* horizontal rhythm for rows (apply to each sibling after the first) */
+.hstack-8  { margin-left: 8px; }
+.hstack-12 { margin-left: 12px; }
+.hstack-20 { margin-left: 20px; }
+
+/* Tablet split columns (no combinators) */
+.tablet-left  { width: 1380px; margin-right:24px;}
+.tablet-right { width: 420px; }
+
+/* Layout helpers */
+.issue-row { flex-direction: row; justify-content: space-between; align-items: center; }
+.hstack { flex-direction: row; align-items: center; }
+.flex-spacer { flex-grow: 1; }
+
+.buttons-right { align-items: center; }
+
+/* --- group helpers --- */
+.btn-group { flex-direction: row; align-items: center; }
+.group-spacer { width: 20px; height: 1px; } /* visual gap between groups */
+.ml-0 { margin-left: 0; }
+
+/* --- icon buttons (play / reset / stop) --- */
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  background-color: transparent;
+  background-size: 60% auto;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  /* spacing inside the group */
+  margin-left: 8px;
+
+  /* remove borders */
+  border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;
+}
+
+/* selected (active) state for any icon-btn */
+.icon-btn.selected { background-color: #f3c46c; }
+
+/* icons */
+.icon-btn.play  { background-image: url("project://database/Assets/_App/UI/UITK/Icons/play.png"); }
+.icon-btn.reset { background-image: url("project://database/Assets/_App/UI/UITK/Icons/reset.png"); }
+.icon-btn.stop  { background-image: url("project://database/Assets/_App/UI/UITK/Icons/stop.png"); }
+
+/* --- language buttons --- */
+.lang-btn {
+  min-width: 32px;
+  height: 24px;
+  justify-content: center;
+  border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+
+  /* spacing inside the group */
+  margin-left: 6px;
+}
+
+/* selected language (ES = bright yellow like graph) */
+.lang-btn.selected {
+  background-color: #f3c46c;
+  color: #121018; /* readable on yellow */
+  -unity-font-style: bold;
+}
+
+/* State colors */
+.issue-row.is-active .icon-btn {
+  background-color: #1f2b22;
+  border-left-color: #346a44; border-right-color: #346a44; border-top-color: #346a44; border-bottom-color: #346a44;
+}
+.issue-row.is-error .icon-btn {
+  background-color: #2a1e1c;
+  border-left-color: #6a3e34; border-right-color: #6a3e34; border-top-color: #6a3e34; border-bottom-color: #6a3e34;
+}
+
+/* force yellow when selected, even inside active/error rows */
+.issue-row .icon-btn.selected { background-color: #f3c46c; }
+
+/* optional: darken the glyph when selected */
+.icon-btn { -unity-background-image-tint-color: #cfd0d3; }       /* default */
+.issue-row .icon-btn.selected { -unity-background-image-tint-color: #121018; }
+
+
+/* Battery */
+
+.battery { font-size: 12px; color: #cccccc; }
+
+/* Titles / text helpers that were referenced in UXML */
+.title { }
+.text-l { font-size: 16px; }
+.text-m { font-size: 14px; }
+.hint  { font-size: 11px; color: #9ba1a6; }
+.stat-row { flex-direction: column; }
+
+.video-placeholder {
+    height: 160px; /* or whatever height works for your layout */
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    background-color: #2a2833;
+
+    background-image: url("project://database/Assets/_App/UI/UITK/Icons/logo.png");
+    background-size: contain;   /* keep logo proportions */
+    background-repeat: no-repeat;
+    background-position: center;
+}
