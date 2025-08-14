@@ -28,19 +28,19 @@ MonoBehaviour:
       tooltip: 
       showInInspector: 0
       networkSync: 0
-      value: 
-    - useVariable: 1
-      name: VersionName
-      tooltip: 
-      showInInspector: 0
-      networkSync: 0
-      value: 
+      value: Blue Planet
     - useVariable: 1
       name: DefaultLanguage
       tooltip: 
       showInInspector: 0
       networkSync: 0
-      value: 
+      value: EN
+    - useVariable: 1
+      name: Version
+      tooltip: 
+      showInInspector: 0
+      networkSync: 0
+      value: 1.2.3
     vector2Variables: []
     vector3Variables: []
     colorVariables: []
@@ -54,6 +54,6 @@ MonoBehaviour:
     enumVariables: []
     categories:
     - 
-    variableCategoryIDs: 00000000000000000000000000000000
+    variableCategoryIDs: 0000000000000000000000000000000000000000
   events:
   - CONFIG_READY

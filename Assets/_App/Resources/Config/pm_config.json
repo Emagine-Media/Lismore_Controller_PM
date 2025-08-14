@@ -1,0 +1,15 @@
+{
+  "Strings": {
+    "MovieName": "Blue Planet",
+    "Version": "1.2.3"
+  },
+  "Ints": {
+    "BuildNumber": 1001
+  },
+  "Floats": {
+    "Volume": 0.8
+  },
+  "Bools": {
+    "IsKioskMode": true
+  }
+}
