@@ -182,8 +182,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1206557784}
   - {fileID: 1354521788}
+  - {fileID: 1206557784}
   - {fileID: 2110936964}
   - {fileID: 830691778}
   m_Father: {fileID: 0}
@@ -587,7 +587,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1206557784}
   - component: {fileID: 1206557783}
-  - component: {fileID: 1206557785}
+  - component: {fileID: 1206557786}
   m_Layer: 0
   m_Name: FMETP_Client_sender
   m_TagString: Untagged
@@ -616,27 +616,27 @@ MonoBehaviour:
   EditorShowDataStreamSettings: 0
   EditorShownetworkedObjects: 0
   EditorShowReceiverEvents: 0
-  EditorShowConnectionEvents: 1
-  AutoInit: 1
+  EditorShowConnectionEvents: 0
+  AutoInit: 0
   NetworkType: 1
   Server: {fileID: 0}
   Client: {fileID: 0}
   DataStream: {fileID: 0}
   ServerSettings:
-    ServerListenPort: 3333
+    ServerListenPort: 0
     UseAsyncListener: 0
     UseMainThreadSender: 1
     SupportMulticast: 0
     MulticastAddress: 239.255.255.255
     ConnectionCount: 0
   ClientSettings:
-    ClientListenPort: 30010
+    ClientListenPort: 30011
     UseMainThreadSender: 1
     ForceBroadcast: 0
     SupportMulticast: 0
     MulticastAddress: 239.255.255.255
-    AutoNetworkDiscovery: 1
-    ServerIP: 127.0.0.1
+    AutoNetworkDiscovery: 0
+    ServerIP: 192.168.68.108
     IsConnected: 0
   DataStreamSettings:
     DataStreamType: 0
@@ -693,7 +693,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 445751470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1206557785
+--- !u!114 &1206557786
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -708,27 +708,27 @@ MonoBehaviour:
   fsm:
     dataVersion: 2
     usedInTemplate: {fileID: 0}
-    name: ServerLiveBroadcaster
-    startState: Poll
+    name: StartClient
+    startState: delay
     states:
-    - name: Poll
+    - name: delay
       description: 
       colorIndex: 0
       position:
         serializedVersion: 2
         x: 50
-        y: 105
-        width: 112.9
+        y: 100
+        width: 100
         height: 32
       isBreakpoint: 0
       isSequence: 0
       hideUnused: 0
       transitions:
       - fsmEvent:
-          name: CONNECTED
-          isSystemEvent: 0
+          name: FINISHED
+          isSystemEvent: 1
           isGlobal: 0
-        toState: Broadcast
+        toState: Start
         linkStyle: 0
         linkConstraint: 0
         linkTarget: 0
@@ -736,18 +736,80 @@ MonoBehaviour:
       actionData:
         actionNames:
         - HutongGames.PlayMaker.Actions.Wait
-        - HutongGames.PlayMaker.Actions.GetComponent
-        - HutongGames.PlayMaker.Actions.GetProperty
-        - HutongGames.PlayMaker.Actions.BoolTest
+        customNames:
+        - 
+        actionEnabled: 01
+        actionIsOpen: 01
+        actionStartIndex: 00000000
+        actionHashCodes: 48c01101
+        unityObjectParams: []
+        fsmGameObjectParams: []
+        fsmOwnerDefaultParams: []
+        animationCurveParams: []
+        functionCallParams: []
+        fsmTemplateControlParams: []
+        fsmEventTargetParams: []
+        fsmPropertyParams: []
+        layoutOptionParams: []
+        fsmStringParams: []
+        fsmObjectParams: []
+        fsmVarParams: []
+        fsmArrayParams: []
+        fsmEnumParams: []
+        fsmFloatParams:
+        - useVariable: 0
+          name: 
+          tooltip: 
+          showInInspector: 0
+          networkSync: 0
+          value: 0.5
+        fsmIntParams: []
+        fsmBoolParams: []
+        fsmVector2Params: []
+        fsmVector3Params: []
+        fsmColorParams: []
+        fsmRectParams: []
+        fsmQuaternionParams: []
+        stringParams:
+        - 
+        byteData: 01
+        arrayParamSizes: 
+        arrayParamTypes: []
+        customTypeSizes: 
+        customTypeNames: []
+        paramDataType: 0f0000001700000001000000
+        paramName:
+        - time
+        - finishEvent
+        - realTime
+        paramDataPos: 000000000000000000000000
+        paramByteDataSize: 000000000000000001000000
+    - name: Start
+      description: 
+      colorIndex: 0
+      position:
+        serializedVersion: 2
+        x: 136
+        y: 219
+        width: 100
+        height: 16
+      isBreakpoint: 0
+      isSequence: 0
+      hideUnused: 0
+      transitions: []
+      actionData:
+        actionNames:
+        - HutongGames.PlayMaker.Actions.DebugLog
+        - HutongGames.PlayMaker.Actions.SendMessage
+        - HutongGames.PlayMaker.Actions.FinishFSM
         customNames:
         - 
         - 
         - 
-        - 
-        actionEnabled: 01010101
-        actionIsOpen: 01010101
-        actionStartIndex: 00000000030000000600000008000000
-        actionHashCodes: 48c0110104d814025ac85204a4c8bf00
+        actionEnabled: 010101
+        actionIsOpen: 010101
+        actionStartIndex: 000000000300000007000000
+        actionHashCodes: 9c59e50191d45a0000000000
         unityObjectParams: []
         fsmGameObjectParams: []
         fsmOwnerDefaultParams:
@@ -760,22 +822,11 @@ MonoBehaviour:
             networkSync: 0
             value: {fileID: 0}
         animationCurveParams: []
-        functionCallParams: []
-        fsmTemplateControlParams: []
-        fsmEventTargetParams: []
-        fsmPropertyParams:
-        - TargetObject:
-            useVariable: 1
-            name: netMgr
-            tooltip: 
-            showInInspector: 0
-            networkSync: 0
-            typeName: FMSolution.FMNetwork.FMNetworkManager
-            value: {fileID: 0}
-          TargetTypeName: FMSolution.FMNetwork.FMNetworkManager
-          PropertyName: Client.IsConnected
+        functionCallParams:
+        - FunctionName: Action_InitAsClient
+          parameterType: None
           BoolParameter:
-            useVariable: 1
+            useVariable: 0
             name: 
             tooltip: 
             showInInspector: 0
@@ -801,6 +852,14 @@ MonoBehaviour:
             tooltip: 
             showInInspector: 0
             networkSync: 0
+            value: {fileID: 0}
+          ObjectParameter:
+            useVariable: 0
+            name: 
+            tooltip: 
+            showInInspector: 0
+            networkSync: 0
+            typeName: 
             value: {fileID: 0}
           StringParameter:
             useVariable: 0
@@ -842,14 +901,6 @@ MonoBehaviour:
             showInInspector: 0
             networkSync: 0
             value: {x: 0, y: 0, z: 0, w: 0}
-          ObjectParameter:
-            useVariable: 0
-            name: 
-            tooltip: 
-            showInInspector: 0
-            networkSync: 0
-            typeName: System.Boolean
-            value: {fileID: 0}
           MaterialParameter:
             useVariable: 0
             name: 
@@ -879,7 +930,7 @@ MonoBehaviour:
             tooltip: 
             showInInspector: 0
             networkSync: 0
-            enumName: 
+            enumName: HutongGames.PlayMaker.None
             intValue: 0
           ArrayParameter:
             useVariable: 0
@@ -888,135 +939,15 @@ MonoBehaviour:
             showInInspector: 0
             networkSync: 0
             type: -1
-            objectTypeName: 
+            objectTypeName: UnityEngine.Object
             floatValues: []
             intValues: 
             boolValues: 
             stringValues: []
             vector4Values: []
             objectReferences: []
-          setProperty: 0
-        layoutOptionParams: []
-        fsmStringParams: []
-        fsmObjectParams:
-        - useVariable: 1
-          name: netMgr
-          tooltip: 
-          showInInspector: 0
-          networkSync: 0
-          typeName: FMSolution.FMNetwork.FMNetworkManager
-          value: {fileID: 0}
-        fsmVarParams: []
-        fsmArrayParams: []
-        fsmEnumParams: []
-        fsmFloatParams:
-        - useVariable: 0
-          name: 
-          tooltip: 
-          showInInspector: 0
-          networkSync: 0
-          value: 1
-        fsmIntParams: []
-        fsmBoolParams:
-        - useVariable: 1
-          name: isConnected
-          tooltip: 
-          showInInspector: 0
-          networkSync: 0
-          value: 0
-        fsmVector2Params: []
-        fsmVector3Params: []
-        fsmColorParams: []
-        fsmRectParams: []
-        fsmQuaternionParams: []
-        stringParams:
-        - 
-        - CONNECTED
-        - 
-        byteData: 00000100
-        arrayParamSizes: 
-        arrayParamTypes: []
-        customTypeSizes: 
-        customTypeNames: []
-        paramDataType: 0f0000001700000001000000140000001800000001000000240000000100000011000000170000001700000001000000
-        paramName:
-        - time
-        - finishEvent
-        - realTime
-        - gameObject
-        - storeComponent
-        - everyFrame
-        - targetProperty
-        - everyFrame
-        - boolVariable
-        - isTrue
-        - isFalse
-        - everyFrame
-        paramDataPos: 000000000000000000000000000000000000000001000000000000000200000000000000010000000200000003000000
-        paramByteDataSize: 000000000000000001000000000000000000000001000000000000000100000000000000000000000000000001000000
-    - name: Broadcast
-      description: 
-      colorIndex: 0
-      position:
-        serializedVersion: 2
-        x: 94
-        y: 290
-        width: 100
-        height: 16
-      isBreakpoint: 0
-      isSequence: 0
-      hideUnused: 0
-      transitions: []
-      actionData:
-        actionNames:
-        - HutongGames.PlayMaker.Actions.SendEvent
-        - HutongGames.PlayMaker.Actions.DebugLog
-        customNames:
-        - 
-        - 
-        actionEnabled: 0101
-        actionIsOpen: 0101
-        actionStartIndex: 0000000004000000
-        actionHashCodes: 5e69bb049c59e501
-        unityObjectParams: []
-        fsmGameObjectParams: []
-        fsmOwnerDefaultParams: []
-        animationCurveParams: []
-        functionCallParams: []
         fsmTemplateControlParams: []
-        fsmEventTargetParams:
-        - target: 4
-          excludeSelf:
-            useVariable: 0
-            name: 
-            tooltip: 
-            showInInspector: 0
-            networkSync: 0
-            value: 0
-          gameObject:
-            ownerOption: 0
-            gameObject:
-              useVariable: 0
-              name: 
-              tooltip: 
-              showInInspector: 0
-              networkSync: 0
-              value: {fileID: 0}
-          fsmName:
-            useVariable: 0
-            name: 
-            tooltip: 
-            showInInspector: 0
-            networkSync: 0
-            value: 
-          sendToChildren:
-            useVariable: 0
-            name: 
-            tooltip: 
-            showInInspector: 0
-            networkSync: 0
-            value: 0
-          fsmComponent: {fileID: 0}
+        fsmEventTargetParams: []
         fsmPropertyParams: []
         layoutOptionParams: []
         fsmStringParams:
@@ -1025,18 +956,12 @@ MonoBehaviour:
           tooltip: 
           showInInspector: 0
           networkSync: 0
-          value: Broadcast FM_SERVER_LIVE
+          value: Calling InitAsClient
         fsmObjectParams: []
         fsmVarParams: []
         fsmArrayParams: []
         fsmEnumParams: []
-        fsmFloatParams:
-        - useVariable: 0
-          name: 
-          tooltip: 
-          showInInspector: 0
-          networkSync: 0
-          value: 0
+        fsmFloatParams: []
         fsmIntParams: []
         fsmBoolParams: []
         fsmVector2Params: []
@@ -1044,31 +969,24 @@ MonoBehaviour:
         fsmColorParams: []
         fsmRectParams: []
         fsmQuaternionParams: []
-        stringParams:
-        - FM_SERVER_LIVE
-        byteData: 000000000000
+        stringParams: []
+        byteData: 00000000010000000001000000
         arrayParamSizes: 
         arrayParamTypes: []
         customTypeSizes: 
         customTypeNames: []
-        paramDataType: 1f000000170000000f00000001000000070000001200000001000000
+        paramDataType: 07000000120000000100000014000000070000000700000015000000
         paramName:
-        - eventTarget
-        - sendEvent
-        - delay
-        - everyFrame
         - logLevel
         - text
         - sendToUnityLog
-        paramDataPos: 00000000000000000000000000000000010000000000000005000000
-        paramByteDataSize: 00000000000000000000000001000000040000000000000001000000
+        - gameObject
+        - delivery
+        - options
+        - functionCall
+        paramDataPos: 00000000000000000400000000000000050000000900000000000000
+        paramByteDataSize: 04000000000000000100000000000000040000000400000000000000
     events:
-    - name: CONNECTED
-      isSystemEvent: 0
-      isGlobal: 0
-    - name: FM_SERVER_LIVE
-      isSystemEvent: 0
-      isGlobal: 1
     - name: FINISHED
       isSystemEvent: 1
       isGlobal: 0
@@ -1076,13 +994,7 @@ MonoBehaviour:
     variables:
       floatVariables: []
       intVariables: []
-      boolVariables:
-      - useVariable: 1
-        name: isConnected
-        tooltip: 
-        showInInspector: 0
-        networkSync: 0
-        value: 0
+      boolVariables: []
       stringVariables: []
       vector2Variables: []
       vector3Variables: []
@@ -1090,21 +1002,14 @@ MonoBehaviour:
       rectVariables: []
       quaternionVariables: []
       gameObjectVariables: []
-      objectVariables:
-      - useVariable: 1
-        name: netMgr
-        tooltip: 
-        showInInspector: 0
-        networkSync: 0
-        typeName: FMSolution.FMNetwork.FMNetworkManager
-        value: {fileID: 0}
+      objectVariables: []
       materialVariables: []
       textureVariables: []
       arrayVariables: []
       enumVariables: []
       categories:
       - 
-      variableCategoryIDs: 0000000000000000
+      variableCategoryIDs: 
     description: 
     docUrl: 
     showStateLabel: 0
@@ -1209,7 +1114,7 @@ MonoBehaviour:
   enableConventionBinding: 1
   pollSeconds: 0.25
   ignoreEmptyUpdates: 1
-  logUpdates: 1
+  logUpdates: 0
 --- !u!114 &1258660765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1302,7 +1207,7 @@ MonoBehaviour:
     ClientIP: 127.0.0.1
     ClientIPList: []
     UseMainThreadSender: 1
-  DebugStatus: 0
+  DebugStatus: 1
   ShowLog: 1
   Status: 
   UIStatus: {fileID: 0}
@@ -1423,8 +1328,8 @@ MonoBehaviour:
         fsmRectParams: []
         fsmQuaternionParams: []
         stringParams:
-        - 
-        byteData: 00
+        - FINISHED
+        byteData: 01
         arrayParamSizes: 
         arrayParamTypes: []
         customTypeSizes: 
@@ -1451,13 +1356,19 @@ MonoBehaviour:
       transitions: []
       actionData:
         actionNames:
+        - HutongGames.PlayMaker.Actions.DebugLog
         - HutongGames.PlayMaker.Actions.SendMessage
+        - HutongGames.PlayMaker.Actions.SendEvent
+        - HutongGames.PlayMaker.Actions.FinishFSM
         customNames:
         - 
-        actionEnabled: 01
-        actionIsOpen: 01
-        actionStartIndex: 00000000
-        actionHashCodes: 91d45a00
+        - 
+        - 
+        - 
+        actionEnabled: 01010101
+        actionIsOpen: 01010101
+        actionStartIndex: 0000000003000000070000000b000000
+        actionHashCodes: 9c59e50191d45a005e69bb0400000000
         unityObjectParams: []
         fsmGameObjectParams: []
         fsmOwnerDefaultParams:
@@ -1471,7 +1382,7 @@ MonoBehaviour:
             value: {fileID: 0}
         animationCurveParams: []
         functionCallParams:
-        - FunctionName: Init
+        - FunctionName: Action_InitAsServer
           parameterType: None
           BoolParameter:
             useVariable: 0
@@ -1578,7 +1489,7 @@ MonoBehaviour:
             tooltip: 
             showInInspector: 0
             networkSync: 0
-            enumName: 
+            enumName: HutongGames.PlayMaker.None
             intValue: 0
           ArrayParameter:
             useVariable: 0
@@ -1587,7 +1498,7 @@ MonoBehaviour:
             showInInspector: 0
             networkSync: 0
             type: -1
-            objectTypeName: 
+            objectTypeName: UnityEngine.Object
             floatValues: []
             intValues: 
             boolValues: 
@@ -1595,15 +1506,59 @@ MonoBehaviour:
             vector4Values: []
             objectReferences: []
         fsmTemplateControlParams: []
-        fsmEventTargetParams: []
+        fsmEventTargetParams:
+        - target: 4
+          excludeSelf:
+            useVariable: 0
+            name: 
+            tooltip: 
+            showInInspector: 0
+            networkSync: 0
+            value: 0
+          gameObject:
+            ownerOption: 0
+            gameObject:
+              useVariable: 0
+              name: 
+              tooltip: 
+              showInInspector: 0
+              networkSync: 0
+              value: {fileID: 0}
+          fsmName:
+            useVariable: 0
+            name: 
+            tooltip: 
+            showInInspector: 0
+            networkSync: 0
+            value: 
+          sendToChildren:
+            useVariable: 0
+            name: 
+            tooltip: 
+            showInInspector: 0
+            networkSync: 0
+            value: 0
+          fsmComponent: {fileID: 0}
         fsmPropertyParams: []
         layoutOptionParams: []
-        fsmStringParams: []
+        fsmStringParams:
+        - useVariable: 0
+          name: 
+          tooltip: 
+          showInInspector: 0
+          networkSync: 0
+          value: Calling InitAsServer
         fsmObjectParams: []
         fsmVarParams: []
         fsmArrayParams: []
         fsmEnumParams: []
-        fsmFloatParams: []
+        fsmFloatParams:
+        - useVariable: 0
+          name: 
+          tooltip: 
+          showInInspector: 0
+          networkSync: 0
+          value: 0
         fsmIntParams: []
         fsmBoolParams: []
         fsmVector2Params: []
@@ -1611,24 +1566,35 @@ MonoBehaviour:
         fsmColorParams: []
         fsmRectParams: []
         fsmQuaternionParams: []
-        stringParams: []
-        byteData: 0000000001000000
+        stringParams:
+        - FM_SERVER_LIVE
+        byteData: 0000000001000000000100000000
         arrayParamSizes: 
         arrayParamTypes: []
         customTypeSizes: 
         customTypeNames: []
-        paramDataType: 14000000070000000700000015000000
+        paramDataType: 070000001200000001000000140000000700000007000000150000001f000000170000000f00000001000000
         paramName:
+        - logLevel
+        - text
+        - sendToUnityLog
         - gameObject
         - delivery
         - options
         - functionCall
-        paramDataPos: 00000000000000000400000000000000
-        paramByteDataSize: 00000000040000000400000000000000
+        - eventTarget
+        - sendEvent
+        - delay
+        - everyFrame
+        paramDataPos: 000000000000000004000000000000000500000009000000000000000000000000000000000000000d000000
+        paramByteDataSize: 0400000000000000010000000000000004000000040000000000000000000000000000000000000001000000
     events:
     - name: FINISHED
       isSystemEvent: 1
       isGlobal: 0
+    - name: FM_SERVER_LIVE
+      isSystemEvent: 0
+      isGlobal: 1
     globalTransitions: []
     variables:
       floatVariables: []
@@ -1728,7 +1694,7 @@ MonoBehaviour:
   fsm:
     dataVersion: 2
     usedInTemplate: {fileID: 0}
-    name: FSM
+    name: DummyHeadsets
     startState: Idle
     states:
     - name: Idle
@@ -1846,7 +1812,7 @@ MonoBehaviour:
           tooltip: 
           showInInspector: 0
           networkSync: 0
-          value: 0
+          value: 3
         - useVariable: 0
           name: 
           tooltip: 
@@ -2095,15 +2061,21 @@ MonoBehaviour:
         - HutongGames.PlayMaker.Actions.DebugLog
         - HutongGames.PlayMaker.Actions.SetEventData
         - HutongGames.PlayMaker.Actions.SendEvent
+        - HutongGames.PlayMaker.Actions.DebugLog
+        - HutongGames.PlayMaker.Actions.FormatString
+        - HutongGames.PlayMaker.Actions.DebugLog
         customNames:
         - 
         - 
         - 
         - 
-        actionEnabled: 01010101
-        actionIsOpen: 01000000
-        actionStartIndex: 00000000070000000a00000018000000
-        actionHashCodes: ca51e9009c59e501dd23d5035e69bb04
+        - 
+        - 
+        - 
+        actionEnabled: 01010101010101
+        actionIsOpen: 01010101010101
+        actionStartIndex: 00000000070000000a000000180000001c0000001f00000025000000
+        actionHashCodes: ca51e9009c59e501dd23d5035e69bb049c59e501641744009c59e501
         unityObjectParams: []
         fsmGameObjectParams:
         - useVariable: 1
@@ -2170,6 +2142,30 @@ MonoBehaviour:
           showInInspector: 0
           networkSync: 0
           value: 
+        - useVariable: 0
+          name: 
+          tooltip: 
+          showInInspector: 0
+          networkSync: 0
+          value: Headset Joined!
+        - useVariable: 0
+          name: 
+          tooltip: 
+          showInInspector: 0
+          networkSync: 0
+          value: 'Simulated join sent: {0} ({1})'
+        - useVariable: 1
+          name: logMsg
+          tooltip: 
+          showInInspector: 0
+          networkSync: 0
+          value: 
+        - useVariable: 1
+          name: logMsg
+          tooltip: 
+          showInInspector: 0
+          networkSync: 0
+          value: 
         fsmObjectParams:
         - useVariable: 1
           name: senderBehaviour
@@ -2228,6 +2224,54 @@ MonoBehaviour:
           objectType: 
           useVariable: 0
           type: -1
+          floatValue: 0
+          intValue: 0
+          boolValue: 0
+          stringValue: 
+          vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          objectReference: {fileID: 0}
+          arrayValue:
+            useVariable: 0
+            name: 
+            tooltip: 
+            showInInspector: 0
+            networkSync: 0
+            type: -1
+            objectTypeName: 
+            floatValues: []
+            intValues: 
+            boolValues: 
+            stringValues: []
+            vector4Values: []
+            objectReferences: []
+        - variableName: headsetName
+          objectType: UnityEngine.Object
+          useVariable: 1
+          type: 4
+          floatValue: 0
+          intValue: 0
+          boolValue: 0
+          stringValue: 
+          vector4Value: {x: 0, y: 0, z: 0, w: 0}
+          objectReference: {fileID: 0}
+          arrayValue:
+            useVariable: 0
+            name: 
+            tooltip: 
+            showInInspector: 0
+            networkSync: 0
+            type: -1
+            objectTypeName: 
+            floatValues: []
+            intValues: 
+            boolValues: 
+            stringValues: []
+            vector4Values: []
+            objectReferences: []
+        - variableName: handshake
+          objectType: UnityEngine.Object
+          useVariable: 1
+          type: 4
           floatValue: 0
           intValue: 0
           boolValue: 0
@@ -2319,13 +2363,14 @@ MonoBehaviour:
           value: {x: 0, y: 0, z: 0, w: 0}
         stringParams:
         - FM_HEADSET_JOINED
-        byteData: 000000000000000000
-        arrayParamSizes: 01000000
+        byteData: 0000000000000100000000000001000000000001
+        arrayParamSizes: 0100000002000000
         arrayParamTypes:
+        - HutongGames.PlayMaker.FsmVar
         - HutongGames.PlayMaker.FsmVar
         customTypeSizes: 
         customTypeNames: []
-        paramDataType: 18000000120000000c0000002700000027000000010000000100000007000000120000000100000013000000100000000f0000001200000011000000250000001c0000001e0000002300000019000000200000002100000018000000010000001f000000170000000f00000001000000
+        paramDataType: 18000000120000000c0000002700000027000000010000000100000007000000120000000100000013000000100000000f0000001200000011000000250000001c0000001e0000002300000019000000200000002100000018000000010000001f000000170000000f00000001000000070000001200000001000000120000000c00000027000000270000001200000001000000070000001200000001000000
         paramName:
         - behaviour
         - methodName
@@ -2355,8 +2400,20 @@ MonoBehaviour:
         - sendEvent
         - delay
         - everyFrame
-        paramDataPos: 00000000000000000000000000000000010000000000000001000000020000000100000006000000000000000000000000000000020000000000000000000000000000000000000000000000000000000100000002000000030000000700000000000000000000000100000008000000
-        paramByteDataSize: 00000000000000000000000000000000000000000100000001000000040000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000001000000
+        - logLevel
+        - text
+        - sendToUnityLog
+        - format
+        - variables
+        - 
+        - 
+        - storeResult
+        - everyFrame
+        - logLevel
+        - text
+        - sendToUnityLog
+        paramDataPos: 0000000000000000000000000000000001000000000000000100000002000000010000000600000000000000000000000000000002000000000000000000000000000000000000000000000000000000010000000200000003000000070000000000000000000000010000000800000009000000030000000d00000004000000010000000200000003000000050000000e0000000f0000000600000013000000
+        paramByteDataSize: 00000000000000000000000000000000000000000100000001000000040000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000001000000040000000000000001000000000000000000000000000000000000000000000001000000040000000000000001000000
     - name: Loop Decision
       description: 
       colorIndex: 0
@@ -2424,7 +2481,7 @@ MonoBehaviour:
           tooltip: 
           showInInspector: 0
           networkSync: 0
-          value: 0
+          value: 3
         fsmBoolParams: []
         fsmVector2Params: []
         fsmVector3Params: []
@@ -2501,7 +2558,7 @@ MonoBehaviour:
           tooltip: 
           showInInspector: 0
           networkSync: 0
-          value: 0
+          value: 0.25
         fsmIntParams: []
         fsmBoolParams: []
         fsmVector2Params: []
@@ -2617,12 +2674,14 @@ MonoBehaviour:
       actionData:
         actionNames:
         - HutongGames.PlayMaker.Actions.DebugLog
+        - HutongGames.PlayMaker.Actions.FinishFSM
         customNames:
         - 
-        actionEnabled: 01
-        actionIsOpen: 01
-        actionStartIndex: 00000000
-        actionHashCodes: 9c59e501
+        - 
+        actionEnabled: 0101
+        actionIsOpen: 0101
+        actionStartIndex: 0000000003000000
+        actionHashCodes: 9c59e50100000000
         unityObjectParams: []
         fsmGameObjectParams: []
         fsmOwnerDefaultParams: []
@@ -2652,7 +2711,7 @@ MonoBehaviour:
         fsmRectParams: []
         fsmQuaternionParams: []
         stringParams: []
-        byteData: 0000000000
+        byteData: 0000000001
         arrayParamSizes: 
         arrayParamTypes: []
         customTypeSizes: 
@@ -2685,14 +2744,14 @@ MonoBehaviour:
         tooltip: 
         showInInspector: 0
         networkSync: 0
-        value: 0
+        value: 0.25
       intVariables:
       - useVariable: 1
         name: HeadsetCount
         tooltip: 
         showInInspector: 0
         networkSync: 0
-        value: 0
+        value: 3
       - useVariable: 1
         name: I
         tooltip: 
@@ -2715,6 +2774,12 @@ MonoBehaviour:
         value: 
       - useVariable: 1
         name: handshake
+        tooltip: 
+        showInInspector: 0
+        networkSync: 0
+        value: 
+      - useVariable: 1
+        name: logMsg
         tooltip: 
         showInInspector: 0
         networkSync: 0
@@ -2745,7 +2810,7 @@ MonoBehaviour:
       enumVariables: []
       categories:
       - 
-      variableCategoryIDs: 0000000000000000000000000000000000000000000000000000000000000000
+      variableCategoryIDs: 000000000000000000000000000000000000000000000000000000000000000000000000
     description: 
     docUrl: 
     showStateLabel: 0
