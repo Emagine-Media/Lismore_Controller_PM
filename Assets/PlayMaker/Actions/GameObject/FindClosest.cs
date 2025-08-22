@@ -70,7 +70,12 @@ namespace HutongGames.PlayMaker.Actions
 
 			if (string.IsNullOrEmpty(withTag.Value) || withTag.Value == "Untagged")
 			{
-				objects = (GameObject[])GameObject.FindObjectsOfType(typeof(GameObject));
+				
+#if UNITY_2022_3_OR_NEWER
+				objects = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+#else
+				objects = (GameObject[])Object.FindObjectsOfType(typeof(GameObject));
+#endif
 			}
 			else
 			{

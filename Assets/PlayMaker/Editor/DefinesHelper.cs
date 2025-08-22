@@ -4,6 +4,10 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_2023_1_OR_NEWER     
+using UnityEditor.Build;
+#endif
+
 namespace HutongGames.PlayMakerEditor
 {
     /// <summary>
@@ -81,7 +85,11 @@ namespace HutongGames.PlayMakerEditor
 
         public static List<string> GetDefines(BuildTargetGroup buildTargetGroup)
         {
+#if UNITY_2023_1_OR_NEWER            
+            var defines = PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup));
+#else
             var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
+#endif
             return defines.Split(';').Select(d => d.Trim()).ToList();
         }
 
@@ -90,20 +98,32 @@ namespace HutongGames.PlayMakerEditor
             var target = EditorUserBuildSettings.activeBuildTarget;
             var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(target);
             var defines = string.Join(";", definesList.ToArray());
+#if UNITY_2023_1_OR_NEWER
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup), defines);
+#else
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, defines);
+#endif            
         }
 
         public static void SetDefines(BuildTarget target, List<string> definesList)
         {
             var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(target);
             var defines = string.Join(";", definesList.ToArray());
+#if UNITY_2023_1_OR_NEWER 
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup), defines);
+#else
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, defines);
+#endif 
         }
 
         public static void SetDefines(BuildTargetGroup buildTargetGroup, List<string> definesList)
         {
             var defines = string.Join(";", definesList.ToArray());
+#if UNITY_2023_1_OR_NEWER 
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup), defines);
+#else
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, defines);
+#endif 
         }
 
         private static bool IsValidBuildTargetGroup(BuildTargetGroup group)

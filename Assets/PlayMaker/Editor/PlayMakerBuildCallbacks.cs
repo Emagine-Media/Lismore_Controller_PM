@@ -10,10 +10,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Callbacks;
 using Debug = UnityEngine.Debug;
-
-#if UNITY_2018_3_OR_NEWER
 using UnityEditor.Build.Reporting;
-#endif
 
 namespace HutongGames.PlayMakerEditor
 {
@@ -36,34 +33,18 @@ namespace HutongGames.PlayMakerEditor
 
 #endif
 
-
-#if UNITY_2018_3_OR_NEWER    
-
-    public class PlayMakerPreProcessBuild : IPreprocessBuildWithReport
-    {
-        public int callbackOrder { get { return 0; } }
-        
-        public void OnPreprocessBuild(BuildReport report)
+        /* See PlayMakerProjectTools 
+        public class PlayMakerPreProcessBuild : IPreprocessBuildWithReport
         {
-            Debug.Log("PlayMakerPreProcessBuild...");
-            ProjectTools.PreprocessPrefabFSMs();
-        }
-    }
-
-#elif UNITY_5_6_OR_NEWER
-
-    public class PlayMakerPreProcessBuild : IPreprocessBuild
-    {
-        public int callbackOrder { get { return 0; } }
-        public void OnPreprocessBuild(BuildTarget target, string path)
-        {
-            Debug.Log("PlayMakerPreProcessBuild...");
-            ProjectTools.PreprocessPrefabFSMs();
-        }
-    }
-         
-#endif
-
+            public int callbackOrder { get { return 0; } }
+            
+            public void OnPreprocessBuild(BuildReport report)
+            {
+                Debug.Log("PlayMakerPreProcessBuild...");
+                ProjectTools.PreprocessPrefabFSMs();
+            }
+        }*/
+    
         [PostProcessScene(2)]
         public static void OnPostProcessScene()
         {

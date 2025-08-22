@@ -33,7 +33,11 @@ namespace HutongGames.PlayMaker.Actions
 		
 		void DoWakeAll()
 		{
-			var bodies = Object.FindObjectsOfType(typeof(Rigidbody2D)) as Rigidbody2D[];			
+#if UNITY_2022_3_OR_NEWER
+			var bodies = Object.FindObjectsByType<Rigidbody2D>(FindObjectsSortMode.None);
+#else
+			var bodies = Object.FindObjectsOfType(typeof(Rigidbody2D)) as Rigidbody2D[];		
+#endif			
 			if (bodies != null)
 			{
 				foreach (var body in bodies)

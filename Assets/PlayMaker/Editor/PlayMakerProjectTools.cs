@@ -29,6 +29,27 @@ using Debug = UnityEngine.Debug;
 
 namespace HutongGames.PlayMakerEditor
 {
+    /*
+     * These tools did 2 main things:
+     * 
+     * 1. Updated old Unity/PlayMaker projects when major changes were made.
+     * 2. Preprocessed FSMs to optimize runtime performance.
+     *
+     * Problems:
+     *
+     * With Case 1, the Versions fixed are now very old, so it's not clear that
+     * we still need those tools. We will probably retire these soon.
+     * 
+     * With Case 2, SaveAsPrefabAsset in Unity 2022.3 breaks prefab Ids!
+     * Additionally the logic used by SaveAsPrefabAsset (name based matching of GameObjects
+     * and Components) seems fragile and could cause problems in more complex scenarios.
+     * Unity has also optimized component operations since this preprocessing was implemented.
+     *
+     * For these reasons (especially the breaking bug in 2022.3!)
+     * we're sunsetting the prefab tools as we investigate alternatives.
+     * We're not removing the public APIs in case any third party
+     * tools call them, but they won't do anything!
+     */
     public class ProjectTools
     {
         // Change MenuRoot to move the Playmaker Menu
@@ -47,9 +68,12 @@ namespace HutongGames.PlayMakerEditor
             UpdateScenesInBuild();
         }
 
-        [MenuItem(MenuRoot + "Tools/Preprocess Prefab FSMs in Build", false, 27)]
+        //[MenuItem(MenuRoot + "Tools/Preprocess Prefab FSMs in Build", false, 27)]
         public static void PreprocessPrefabFSMs()
         {   
+            Debug.LogWarning("PreprocessPrefabFSMs is Obsolete!");
+            
+            /*
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
 
             var timer = Stopwatch.StartNew();
@@ -59,11 +83,15 @@ namespace HutongGames.PlayMakerEditor
             logOutput += "\nElapsed Time: " + timer.Elapsed.Seconds + "s";
 
             Debug.Log(logOutput);
+            */
         }
 
-        [MenuItem(MenuRoot + "Tools/Preprocess All Prefab FSMs", false, 27)]
+        //[MenuItem(MenuRoot + "Tools/Preprocess All Prefab FSMs", false, 27)]
         public static void PreprocessAllPrefabFSMs()
         {
+            Debug.LogWarning("PreprocessAllPrefabFSMs is Obsolete!");
+
+            /*
             var timer = Stopwatch.StartNew();
 
             var logOutput = DoPreprocessAllPrefabFSMs();
@@ -71,6 +99,7 @@ namespace HutongGames.PlayMakerEditor
             logOutput += "\nElapsed Time: " + timer.Elapsed.Seconds + "s";
 
             Debug.Log(logOutput);
+            */
         }
 
         /*WIP
@@ -181,7 +210,11 @@ namespace HutongGames.PlayMakerEditor
         public static List<string> GetLoadedScenes()
         {
             var openScenes = new List<string>();
+#if UNITY_2022_2_OR_NEWER
             for (var i = 0; i < SceneManager.loadedSceneCount; i++)
+#else
+            for (var i = 0; i < EditorSceneManager.loadedSceneCount; i++)
+#endif                
             {
                 openScenes.Add(SceneManager.GetSceneAt(i).path);
             }
@@ -583,11 +616,7 @@ namespace HutongGames.PlayMakerEditor
             if (component == "collider2D") return FixFsmProperty(gameObject, fsmProperty, typeof(Collider2D));
             if (component == "hingeJoint") return FixFsmProperty(gameObject, fsmProperty, typeof(HingeJoint));
             if (component == "particleSystem") return FixFsmProperty(gameObject, fsmProperty, typeof(ParticleSystem));
-
-#if !UNITY_5_4_OR_NEWER
-            if (component == "particleEmitter") return FixFsmProperty(gameObject, fsmProperty, typeof(ParticleEmitter));
-#endif
-
+            
 #if !(PLATFORM_NOT_SUPPORTED || UNITY_NEW_NETWORK || PLAYMAKER_NO_NETWORK)
             if (component == "networkView") return FixFsmProperty(gameObject, fsmProperty, typeof(NetworkView));
 #endif

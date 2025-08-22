@@ -287,3 +287,6 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+.is-on { color: #22c55e; }
+.is-off { color: #ef4444; }

@@ -52,7 +52,11 @@ namespace HutongGames.PlayMaker.Actions
 			}
 			else
 			{
-                gameObjects = (GameObject[])Object.FindObjectsOfType(typeof(GameObject));
+#if UNITY_2022_3_OR_NEWER
+				gameObjects = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+#else
+				gameObjects = (GameObject[])Object.FindObjectsOfType(typeof(GameObject));
+#endif
 			}
 
 			if (gameObjects.Length > 0)

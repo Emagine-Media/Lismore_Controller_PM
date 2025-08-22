@@ -1,261 +1,167 @@
-<UXML xmlns="UnityEngine.UIElements">
-  <Style src="project://database/Assets/_App/UI/UITK/USS/_theme-dark.uss" />
-  <Style src="project://database/Assets/_App/UI/UITK/USS/dashboard.uss" />
-
-  <VisualElement class="app-root">
-
-    <!-- LEFT 3/4 — big Issues list -->
-    <VisualElement class="tablet-left">
-      <VisualElement class="issues card">
-        <VisualElement class="card-header">
-          <Label class="title text-l" text="Headsets Connected" />
-          <VisualElement class="icon-ghost" />
+<UXML xmlns="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_App/UI/UITK/USS/_theme-dark.uss?fileID=7433441132597879392&amp;guid=2e8cd1831193ed248bdd40d30dc813dd&amp;type=3#_theme-dark" />
+    <Style src="project://database/Assets/_App/UI/UITK/USS/dashboard.uss?fileID=7433441132597879392&amp;guid=25bb66d0badb81444a4ef82e14d06f21&amp;type=3#dashboard" />
+    <VisualElement class="app-root">
+        <VisualElement class="tablet-left">
+            <VisualElement class="issues card">
+                <VisualElement class="card-header">
+                    <Label text="Headsets Connected" class="title text-l" />
+                    <VisualElement class="icon-ghost" />
+                    <Label text="10" name="lblClients" class="title text-l" />
+                </VisualElement>
+                <VisualElement class="issue-row is-active mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon active" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 1" class="row-title" />
+                            <Label text="Connected" class="row-sub active mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <VisualElement class="btn-group">
+                            <Button class="icon-btn play selected ml-0" />
+                            <Button class="icon-btn reset" />
+                            <Button class="icon-btn stop" />
+                        </VisualElement>
+                        <VisualElement class="group-spacer" />
+                        <VisualElement class="btn-group">
+                            <Button text="EN" class="lang-btn ml-0" />
+                            <Button text="FR" class="lang-btn selected" />
+                            <Button text="IL" class="lang-btn" />
+                            <Button text="ES" class="lang-btn" />
+                        </VisualElement>
+                        <Label text="85%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-active mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon active" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 2" class="row-title" />
+                            <Label text="Connected" class="row-sub active mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <VisualElement class="btn-group">
+                            <Button class="icon-btn play selected ml-0" />
+                            <Button class="icon-btn reset" />
+                            <Button class="icon-btn stop" />
+                        </VisualElement>
+                        <VisualElement class="group-spacer" />
+                        <VisualElement class="btn-group">
+                            <Button text="EN" class="lang-btn selected ml-0" />
+                            <Button text="FR" class="lang-btn" />
+                            <Button text="IL" class="lang-btn" />
+                            <Button text="ES" class="lang-btn" />
+                        </VisualElement>
+                        <Label text="85%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-error mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon error" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 3" class="row-title" />
+                            <Label text="Connecting" class="row-sub error mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <Label text="85%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-active mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon active" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 4" class="row-title" />
+                            <Label text="Connected" class="row-sub active mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <VisualElement class="btn-group">
+                            <Button class="icon-btn play selected ml-0" />
+                            <Button class="icon-btn reset" />
+                            <Button class="icon-btn stop" />
+                        </VisualElement>
+                        <VisualElement class="group-spacer" />
+                        <VisualElement class="btn-group">
+                            <Button text="EN" class="lang-btn selected ml-0" />
+                            <Button text="FR" class="lang-btn" />
+                            <Button text="IL" class="lang-btn" />
+                            <Button text="ES" class="lang-btn" />
+                        </VisualElement>
+                        <Label text="85%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-disconnected mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon disconnected" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 5" class="row-title" />
+                            <Label text="Disconnected" class="row-sub disconnected mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <Label text="0%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+            </VisualElement>
         </VisualElement>
-
-
-
-        <!-- 
-            #################################################################### 
-             Headset row with right-side buttons 
-            #################################################################### 
-         -->
-        <VisualElement class="issue-row is-active mt-12">
-          <!-- left section -->
-          <VisualElement class="hstack">
-            <VisualElement class="issue-icon active" />
-            <VisualElement class="issue-copy ml-12">
-              <Label class="row-title" text="Headset 1" />
-              <Label class="row-sub active mt-2" text="Connected" />
+        <VisualElement class="tablet-right">
+            <VisualElement class="profile card">
+                <VisualElement class="avatar-wrap">
+                    <VisualElement class="avatar" />
+                </VisualElement>
+                <Label name="lblMovie" text="[movie name]" class="name text-m mt-8" />
+                <Label name="lblVersion" text=" [version]" class="role mt-8" />
+                <Label name="lblLanguage" text="[lang]" class="hint mt-6" />
+                <Label text="[server status]" name="lblServer" focusable="true" class="title text-l" />
             </VisualElement>
-          </VisualElement>
-
-          <!-- spacer pushes next container to far right -->
-          <VisualElement class="flex-spacer" />
-
-          <!-- right section -->
-            <VisualElement class="hstack buttons-right">
-
-            <!-- controls group -->
-            <VisualElement class="btn-group">
-                <Button class="icon-btn play selected ml-0" />
-                <Button class="icon-btn reset" />
-                <Button class="icon-btn stop" />
+            <VisualElement class="reports card mt-24">
+                <VisualElement class="stat-row">
+                    <Label text="3" class="stat-big" />
+                </VisualElement>
+                <VisualElement class="progress mt-12">
+                    <Label text="Playtime Left - 5:05" class="hint" />
+                    <VisualElement class="track mt-6">
+                        <VisualElement class="fill w-69p" />
+                        <VisualElement class="wave" />
+                    </VisualElement>
+                </VisualElement>
             </VisualElement>
-
-            <!-- visual gap between groups -->
-            <VisualElement class="group-spacer" />
-
-            <!-- languages group -->
-            <VisualElement class="btn-group">
-                <Button class="lang-btn ml-0" text="EN" />
-                <Button class="lang-btn selected" text="FR" />
-                <Button class="lang-btn" text="IL" />
-                <Button class="lang-btn" text="ES" />
+            <VisualElement class="reports card mt-24">
+                <Label text="Experience Control" class="title text-l" />
+                <VisualElement class="quick-grid mt-12">
+                    <VisualElement class="qbtn">
+                        <Label text="Play All " />
+                    </VisualElement>
+                    <VisualElement class="qbtn hstack-12">
+                        <Label text="Pause All" />
+                    </VisualElement>
+                    <VisualElement class="qbtn hstack-12">
+                        <Label text="Stop All" />
+                    </VisualElement>
+                </VisualElement>
+                <Label text="Default Language" class="title text-l mt-12" />
+                <VisualElement class="quick-grid mt-12 btn-group">
+                    <Button name="btnLangEN" text="EN" class="qbtn lang-btn ml-0" />
+                    <Button name="btnLangFR" text="FR" class="qbtn lang-btn" />
+                    <Button name="btnLangIL" text="IL" class="qbtn lang-btn" />
+                    <Button name="btnLangES" text="ES" class="qbtn lang-btn" />
+                </VisualElement>
             </VisualElement>
-
-            <Label class="battery ml-12" text="85%" />
+            <VisualElement class="chart-block card mt-24">
+                <VisualElement class="card-header">
+                    <Label text="Now Playing" class="title text-l" />
+                    <VisualElement class="icon-ghost" />
+                </VisualElement>
+                <VisualElement class="video-placeholder mt-6" />
             </VisualElement>
-
         </VisualElement>
-
-
-        <VisualElement class="issue-row is-active mt-12">
-          <!-- left section -->
-          <VisualElement class="hstack">
-            <VisualElement class="issue-icon active" />
-            <VisualElement class="issue-copy ml-12">
-              <Label class="row-title" text="Headset 2" />
-              <Label class="row-sub active mt-2" text="Connected" />
-            </VisualElement>
-          </VisualElement>
-
-          <!-- spacer pushes next container to far right -->
-          <VisualElement class="flex-spacer" />
-
-          <!-- right section -->
-            <VisualElement class="hstack buttons-right">
-
-            <!-- controls group -->
-            <VisualElement class="btn-group">
-                <Button class="icon-btn play selected ml-0" />
-                <Button class="icon-btn reset" />
-                <Button class="icon-btn stop" />
-            </VisualElement>
-
-            <!-- visual gap between groups -->
-            <VisualElement class="group-spacer" />
-
-            <!-- languages group -->
-            <VisualElement class="btn-group">
-                <Button class="lang-btn selected ml-0" text="EN" />
-                <Button class="lang-btn" text="FR" />
-                <Button class="lang-btn" text="IL" />
-                <Button class="lang-btn" text="ES" />
-            </VisualElement>
-
-            <Label class="battery ml-12" text="85%" />
-            </VisualElement>
-
-        </VisualElement>
-
-        <!-- 
-            #################################################################### 
-             Headset row with error and no buttonss 
-            #################################################################### 
-         -->
-        <VisualElement class="issue-row is-error mt-12">
-          <!-- left section -->
-          <VisualElement class="hstack">
-            <VisualElement class="issue-icon error" />
-            <VisualElement class="issue-copy ml-12">
-              <Label class="row-title" text="Headset 3" />
-              <Label class="row-sub error mt-2" text="Connecting" />
-            </VisualElement>
-          </VisualElement>
-
-          <!-- spacer pushes next container to far right -->
-          <VisualElement class="flex-spacer" />
-
-          <!-- right section -->
-            <VisualElement class="hstack buttons-right">
-
-            <Label class="battery ml-12" text="85%" />
-            </VisualElement>
-
-        </VisualElement>
-
-        <!-- 
-            #################################################################### 
-             Headset row with right-side buttons 
-            #################################################################### 
-         -->
-        <VisualElement class="issue-row is-active mt-12">
-          <!-- left section -->
-          <VisualElement class="hstack">
-            <VisualElement class="issue-icon active" />
-            <VisualElement class="issue-copy ml-12">
-              <Label class="row-title" text="Headset 4" />
-              <Label class="row-sub active mt-2" text="Connected" />
-            </VisualElement>
-          </VisualElement>
-
-          <!-- spacer pushes next container to far right -->
-          <VisualElement class="flex-spacer" />
-
-          <!-- right section -->
-            <VisualElement class="hstack buttons-right">
-
-            <!-- controls group -->
-            <VisualElement class="btn-group">
-                <Button class="icon-btn play selected ml-0" />
-                <Button class="icon-btn reset" />
-                <Button class="icon-btn stop" />
-            </VisualElement>
-
-            <!-- visual gap between groups -->
-            <VisualElement class="group-spacer" />
-
-            <!-- languages group -->
-            <VisualElement class="btn-group">
-                <Button class="lang-btn selected ml-0" text="EN" />
-                <Button class="lang-btn" text="FR" />
-                <Button class="lang-btn" text="IL" />
-                <Button class="lang-btn" text="ES" />
-            </VisualElement>
-
-            <Label class="battery ml-12" text="85%" />
-            </VisualElement>
-
-        </VisualElement>
-
-        <!-- 
-            #################################################################### 
-             Disconnected headset row
-            #################################################################### 
-         -->
-       <VisualElement class="issue-row is-disconnected mt-12">
-          <!-- left section -->
-          <VisualElement class="hstack">
-            <VisualElement class="issue-icon disconnected" />
-            <VisualElement class="issue-copy ml-12">
-              <Label class="row-title" text="Headset 5" />
-              <Label class="row-sub disconnected mt-2" text="Disconnected" />
-            </VisualElement>
-          </VisualElement>
-
-          <!-- spacer pushes next container to far right -->
-          <VisualElement class="flex-spacer" />
-
-          <!-- right section -->
-            <VisualElement class="hstack buttons-right">
-            <Label class="battery ml-12" text="0%" />
-            </VisualElement>
-
-        </VisualElement>
-
-
-
-      </VisualElement>
     </VisualElement>
-
-    <!-- RIGHT 1/4 — image + [movie name] + version, then reports, then charts stacked -->
-    <VisualElement class="tablet-right">
-
-      <!-- Image + Title + Version -->
-      <VisualElement class="profile card">
-        <VisualElement class="avatar-wrap">
-          <VisualElement class="avatar" />
-        </VisualElement>
-        <Label name="movieNameLabel" class="name text-m mt-8" text="[movie name]" />
-        <Label name="versionLabel" class="role mt-8" text="Version 1.0.0" />
-        <Label name="defaultLangLabel" class="hint mt-6" text="EN" />
-      </VisualElement>
-
-      <!-- Headset Report -->
-      <VisualElement class="reports card mt-24">
-        <Label class="title text-l" text="Headsets Connected" />
-        <VisualElement class="stat-row">
-          <Label class="stat-big" text="3" />
-        </VisualElement>
-        <VisualElement class="progress mt-12">
-          <Label class="hint" text="Playtime Left - 5:05" />
-          <VisualElement class="track mt-6">
-            <VisualElement class="fill w-69p" />
-            <VisualElement class="wave" />
-          </VisualElement>
-        </VisualElement>
-      </VisualElement>
-
-      <!-- Headset Report -->
-      <VisualElement class="reports card mt-24">
-        <Label class="title text-l" text="Experience Control" />
-        <VisualElement class="quick-grid mt-12">
-          <VisualElement class="qbtn"><Label text="Play All " /></VisualElement>
-          <VisualElement class="qbtn hstack-12"><Label text="Pause All" /></VisualElement>
-          <VisualElement class="qbtn hstack-12"><Label text="Stop All" /></VisualElement>
-        </VisualElement>
-         <Label class="title text-l mt-12" text="Default Language" />
-         <!-- languages group -->
-        <VisualElement class="quick-grid mt-12 btn-group">
-                <Button name="btnLangEN" class="qbtn lang-btn ml-0" text="EN" />
-                <Button name="btnLangFR" class="qbtn lang-btn" text="FR" />
-                <Button name="btnLangIL" class="qbtn lang-btn" text="IL" />
-                <Button name="btnLangES" class="qbtn lang-btn" text="ES" />
-            </VisualElement>
-      </VisualElement>
-
-      <!-- Movie Preview-->
-      <VisualElement class="chart-block card mt-24">
-        <VisualElement class="card-header">
-            <Label class="title text-l" text="Now Playing" />
-            <VisualElement class="icon-ghost" />
-        </VisualElement>
-        <!-- Placeholder video/image area -->
-        <VisualElement class="video-placeholder mt-6" />
-      </VisualElement>
-
-
-    </VisualElement>
-
-  </VisualElement>
 </UXML>
