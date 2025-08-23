@@ -11,13 +11,13 @@ public class UIToolkitBridge : MonoBehaviour
 
     private VisualElement _root;
 
-    // Click buffer for buttons we bind/create at runtime
+    // Click buffer for any UI Toolkit Button we wire up
     private readonly HashSet<string> _buttonClicks = new HashSet<string>(StringComparer.Ordinal);
 
-    // Field change buffer (TextField / DropdownField)
+    // Field change buffer (TextField, DropdownField)
     private readonly Dictionary<string, string> _fieldChanges = new Dictionary<string, string>(StringComparer.Ordinal);
 
-    private void Awake()
+    void Awake()
     {
         if (uiDocument == null)
             uiDocument = GetComponent<UIDocument>();
@@ -26,46 +26,20 @@ public class UIToolkitBridge : MonoBehaviour
 
     // ---------- Root & element access ----------
     public VisualElement GetRoot() => _root;
-
     public VisualElement GetElement(string name) => _root?.Q<VisualElement>(name);
-    public Label GetLabel(string name) => _root?.Q<Label>(name);
     public TextElement GetTextElement(string name) => _root?.Q<TextElement>(name);
+    public Label GetLabel(string name) => _root?.Q<Label>(name);
     public TextField GetTextField(string name) => _root?.Q<TextField>(name);
     public DropdownField GetDropdown(string name) => _root?.Q<DropdownField>(name);
     public Button GetButton(string name) => _root?.Q<Button>(name);
 
-    // ---------- Text helpers (Label/TextElement/TextField) ----------
+    // ---------- Generic helpers ----------
     public void SetText(string elementName, string text)
     {
         var el = GetTextElement(elementName);
         if (el != null) el.text = text ?? string.Empty;
     }
 
-    public void SetTextField(string elementName, string value)
-    {
-        var tf = GetTextField(elementName);
-        if (tf != null) tf.value = value ?? string.Empty;
-    }
-
-    public string GetTextFieldValue(string elementName)
-    {
-        var tf = GetTextField(elementName);
-        return tf != null ? tf.value : string.Empty;
-    }
-
-    public void SetDropdownValue(string elementName, string value)
-    {
-        var dd = GetDropdown(elementName);
-        if (dd != null) dd.value = value ?? string.Empty;
-    }
-
-    public string GetDropdownValue(string elementName)
-    {
-        var dd = GetDropdown(elementName);
-        return dd != null ? dd.value : string.Empty;
-    }
-
-    // ---------- Class helpers ----------
     public void AddClass(string elementName, string className)
     {
         var el = GetElement(elementName);
@@ -85,13 +59,6 @@ public class UIToolkitBridge : MonoBehaviour
         if (enabled) el.AddToClassList(className); else el.RemoveFromClassList(className);
     }
 
-    public bool HasClass(string elementName, string className)
-    {
-        var el = GetElement(elementName);
-        return el != null && el.ClassListContains(className);
-    }
-
-    // ---------- Visibility ----------
     public void SetVisible(string elementName, bool visible)
     {
         var el = GetElement(elementName);
@@ -99,7 +66,7 @@ public class UIToolkitBridge : MonoBehaviour
         el.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
-    // ---------- Button click binding & polling ----------
+    // ---------- Button binding & polling ----------
     public void BindButton(string elementName)
     {
         var btn = GetButton(elementName);
@@ -108,7 +75,6 @@ public class UIToolkitBridge : MonoBehaviour
         btn.clicked += () => _buttonClicks.Add(id);
     }
 
-    // Returns true once per actual click (consumes the flag)
     public bool ConsumeButtonClicked(string elementName)
     {
         if (_buttonClicks.Contains(elementName))
@@ -119,7 +85,7 @@ public class UIToolkitBridge : MonoBehaviour
         return false;
     }
 
-    // ---------- Dropdown helpers (choices & change binding) ----------
+    // ---------- Dropdown helpers ----------
     public void SetDropdownChoices(string elementName, string[] options, int selectIndex = 0)
     {
         var dd = GetDropdown(elementName);
@@ -173,41 +139,31 @@ public class UIToolkitBridge : MonoBehaviour
         return null;
     }
 
-    // ---------- Dynamic language buttons ----------
-    // Create buttons under a container from CSV like "EN,FR,ES,IL"
+    // ---------- Language buttons (global list) ----------
     public void RebuildLanguageButtonsFromCSV(string containerName, string csv, string baseClasses = "qbtn lang-btn")
     {
         var root = GetElement(containerName);
         if (root == null) return;
-
         root.Clear();
-
         var tokens = (csv ?? "").Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries);
         foreach (var raw in tokens)
         {
             var code = raw.Trim();
             if (string.IsNullOrEmpty(code)) continue;
-
             var btn = new Button();
             btn.name = "btnLang" + code;  // e.g., btnLangEN
-            btn.text = code;               // e.g., EN
-
+            btn.text = code;
             foreach (var cls in (baseClasses ?? string.Empty).Split(new[]{' '}, StringSplitOptions.RemoveEmptyEntries))
                 btn.AddToClassList(cls);
-
-            var id = btn.name; // capture
-            btn.clicked += () => _buttonClicks.Add(id);
-
+            var id = btn.name; btn.clicked += () => _buttonClicks.Add(id);
             root.Add(btn);
         }
     }
 
-    // Add 'selected' class to the matching language button and remove from others
     public void SelectLanguageButton(string containerName, string code, string selectedClass = "selected")
     {
         var root = GetElement(containerName);
         if (root == null) return;
-
         foreach (var child in root.Children())
         {
             if (child is Button b)
@@ -218,4 +174,162 @@ public class UIToolkitBridge : MonoBehaviour
             }
         }
     }
+
+    // ---------- Client Cards by UUID ----------
+    public void EnsureClientCards(string containerName, int targetCount)
+    {
+        var root = GetElement(containerName);
+        if (root == null) return;
+        while (root.childCount > targetCount) root.RemoveAt(root.childCount - 1);
+        while (root.childCount < targetCount) AddClientCard(containerName, (root.childCount + 1).ToString());
+    }
+
+    // Add a numbered card (legacy helper)
+    public void AddClientCard(string containerName, string displayIndex)
+    {
+        AddOrUpdateClientCard(containerName, displayIndex, $"Headset {displayIndex}", null, null);
+    }
+
+    public void AddOrUpdateClientCard(string containerName, string uuid, string displayName, string languagesCsv, string defaultLang)
+    {
+        var list = GetElement(containerName);
+        if (list == null) return;
+
+        var cardName = $"clientCard_{uuid}";
+        var card = list.Q<VisualElement>(cardName);
+        if (card == null)
+        {
+            card = new VisualElement { name = cardName };
+            card.AddToClassList("issue-row");
+            card.AddToClassList("is-active");
+            card.AddToClassList("mt-12");
+
+            // LEFT
+            var hstack = new VisualElement(); hstack.AddToClassList("hstack");
+            var icon = new VisualElement();
+            icon.name = $"issueIcon_{uuid}";                 // named so FSMs can target it
+            icon.AddToClassList("issue-icon");
+            icon.AddToClassList("active");
+            var copy = new VisualElement(); copy.AddToClassList("issue-copy"); copy.AddToClassList("ml-12");
+            var lblTitle = new Label("") { name = $"lblClientTitle_{uuid}" }; lblTitle.AddToClassList("row-title");
+            var lblSub   = new Label("Connected") { name = $"lblClientSub_{uuid}" }; lblSub.AddToClassList("row-sub"); lblSub.AddToClassList("active"); lblSub.AddToClassList("mt-2");
+            copy.Add(lblTitle); copy.Add(lblSub);
+            hstack.Add(icon); hstack.Add(copy);
+
+            // SPACER
+            var spacer = new VisualElement(); spacer.AddToClassList("flex-spacer");
+
+            // RIGHT
+            var right = new VisualElement(); right.AddToClassList("hstack"); right.AddToClassList("buttons-right");
+            var btnGroup = new VisualElement(); btnGroup.AddToClassList("btn-group");
+            var btnPlay  = new Button(){ name = $"btnPlay_{uuid}"  }; btnPlay.AddToClassList("icon-btn"); btnPlay.AddToClassList("play"); btnPlay.AddToClassList("selected"); btnPlay.AddToClassList("ml-0");
+            var btnReset = new Button(){ name = $"btnReset_{uuid}" }; btnReset.AddToClassList("icon-btn"); btnReset.AddToClassList("reset");
+            var btnStop  = new Button(){ name = $"btnStop_{uuid}"  }; btnStop.AddToClassList("icon-btn"); btnStop.AddToClassList("stop");
+            var idPlay = btnPlay.name;  btnPlay.clicked  += () => _buttonClicks.Add(idPlay);
+            var idReset= btnReset.name; btnReset.clicked += () => _buttonClicks.Add(idReset);
+            var idStop = btnStop.name;  btnStop.clicked  += () => _buttonClicks.Add(idStop);
+            btnGroup.Add(btnPlay); btnGroup.Add(btnReset); btnGroup.Add(btnStop);
+
+            // Language group container for this card
+            var langGroup = new VisualElement { name = $"langGroup_{uuid}" }; langGroup.AddToClassList("btn-group");
+
+            // Battery label
+            var battery = new Label("85%") { name = $"lblBattery_{uuid}" }; battery.AddToClassList("battery"); battery.AddToClassList("ml-12");
+
+            right.Add(btnGroup);
+            right.Add(new VisualElement(){ name=$"groupSpacer_{uuid}", pickingMode = PickingMode.Ignore });
+            right.Add(langGroup);
+            right.Add(battery);
+
+            // Assemble
+            card.Add(hstack);
+            card.Add(spacer);
+            card.Add(right);
+            list.Add(card);
+        }
+
+        // Update display name
+        var title = card.Q<Label>($"lblClientTitle_{uuid}");
+        if (title != null) title.text = displayName ?? uuid;
+
+        // Build language buttons if CSV provided
+        if (!string.IsNullOrEmpty(languagesCsv))
+        {
+            BuildLanguageButtonsForCard(uuid, languagesCsv, defaultLang);
+        }
+    }
+
+    public void BuildLanguageButtonsForCard(string uuid, string languagesCsv, string defaultLang)
+    {
+        var langGroup = _root?.Q<VisualElement>($"langGroup_{uuid}");
+        if (langGroup == null) return;
+        langGroup.Clear();
+
+        var tokens = (languagesCsv ?? "").Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries)
+                       .Select(s => s.Trim()).Where(s => !string.IsNullOrEmpty(s));
+        foreach (var code in tokens)
+        {
+            var btn = new Button { name = $"btnLang_{uuid}_{code}", text = code };
+            btn.AddToClassList("lang-btn");
+            var id = btn.name; btn.clicked += () => _buttonClicks.Add(id);
+            langGroup.Add(btn);
+        }
+
+        // Select default
+        SelectClientLanguage("clientsList", uuid, defaultLang);
+    }
+
+    public void SelectClientLanguage(string containerName, string uuid, string code, string selectedClass = "selected")
+    {
+        var langGroup = _root?.Q<VisualElement>($"langGroup_{uuid}");
+        if (langGroup == null) return;
+        foreach (var child in langGroup.Children())
+        {
+            if (child is Button b)
+            {
+                bool match = b.name.Equals($"btnLang_{uuid}_{code}", StringComparison.OrdinalIgnoreCase);
+                if (match) b.AddToClassList(selectedClass); else b.RemoveFromClassList(selectedClass);
+            }
+        }
+    }
+
+    public void RemoveClientCardByUUID(string containerName, string uuid)
+    {
+        var list = GetElement(containerName);
+        if (list == null) return;
+        var card = list.Q<VisualElement>($"clientCard_{uuid}");
+        if (card != null) list.Remove(card);
+    }
+
+    public int GetChildCount(string containerName)
+    {
+        var root = GetElement(containerName);
+        return root != null ? root.childCount : 0;
+    }
+
+    // ---------- Status helpers (row+icon+sub in one call) ----------
+    public void SetClientStatusRed(string uuid)
+    {
+        var card = _root?.Q<VisualElement>($"clientCard_{uuid}");
+        var icon = _root?.Q<VisualElement>($"issueIcon_{uuid}");
+        var sub  = _root?.Q<Label>($"lblClientSub_{uuid}");
+
+        if (card != null){ card.RemoveFromClassList("is-active"); card.AddToClassList("is-error"); }
+        if (icon != null){ icon.RemoveFromClassList("active");    icon.AddToClassList("error");    }
+        if (sub  != null){ sub.RemoveFromClassList("active");     sub.AddToClassList("error");     }
+    }
+
+    public void SetClientStatusGreen(string uuid)
+    {
+        var card = _root?.Q<VisualElement>($"clientCard_{uuid}");
+        var icon = _root?.Q<VisualElement>($"issueIcon_{uuid}");
+        var sub  = _root?.Q<Label>($"lblClientSub_{uuid}");
+
+        if (card != null){ card.RemoveFromClassList("is-error"); card.AddToClassList("is-active"); }
+        if (icon != null){ icon.RemoveFromClassList("error");    icon.AddToClassList("active");    }
+        if (sub  != null){ sub.RemoveFromClassList("error");     sub.AddToClassList("active");     }
+    }
+
+    // Convenience: GUID string you can call from Playmaker
+    public string NewGuid(string prefix = "") => (prefix ?? "") + System.Guid.NewGuid().ToString("N");
 }

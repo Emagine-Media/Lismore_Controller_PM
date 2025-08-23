@@ -77,6 +77,12 @@ MonoBehaviour:
       showInInspector: 0
       networkSync: 0
       value: 
+    - useVariable: 1
+      name: AvailableLanguages
+      tooltip: 
+      showInInspector: 0
+      networkSync: 0
+      value: 
     vector2Variables: []
     vector3Variables: []
     colorVariables: []
@@ -90,7 +96,7 @@ MonoBehaviour:
     enumVariables: []
     categories:
     - 
-    variableCategoryIDs: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    variableCategoryIDs: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   events:
   - SERVER_OFF
   - SERVER_ON
@@ -98,3 +104,6 @@ MonoBehaviour:
   - TRIGGER_ON
   - SHOW_OFF
   - SHOW_ON
+  - CLIENTS_CHANGED
+  - CLIENT_JOINED
+  - CLIENT_LEFT

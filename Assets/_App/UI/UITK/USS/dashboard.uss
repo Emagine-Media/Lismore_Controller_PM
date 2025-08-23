@@ -290,3 +290,4 @@
 
 .is-on { color: #22c55e; }
 .is-off { color: #ef4444; }
+.debug-border { outline: 2px solid #f00; }

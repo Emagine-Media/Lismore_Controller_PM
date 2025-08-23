@@ -5,99 +5,11 @@
         <VisualElement class="tablet-left">
             <VisualElement class="issues card">
                 <VisualElement class="card-header" style="flex-direction: row; align-items: center; justify-content: space-between;">
-                    <Label text="Headsets Connected" class="title text-l" />
+                    <Label text="Headsets Connected" name="lblClients" class="title text-l" />
                     <VisualElement class="icon-ghost" />
-                    <Label text="10" name="lblClients" class="title text-l" />
                     <Label text="Playtime Left - 5:05" class="hint" />
                 </VisualElement>
-                <VisualElement class="issue-row is-active mt-12">
-                    <VisualElement class="hstack">
-                        <VisualElement class="issue-icon active" />
-                        <VisualElement class="issue-copy ml-12">
-                            <Label text="Headset 1" class="row-title" />
-                            <Label text="Connected" class="row-sub active mt-2" />
-                        </VisualElement>
-                    </VisualElement>
-                    <VisualElement class="flex-spacer" />
-                    <VisualElement class="hstack buttons-right">
-                        <VisualElement class="btn-group">
-                            <Button class="icon-btn play selected ml-0" />
-                            <Button class="icon-btn reset" />
-                            <Button class="icon-btn stop" />
-                        </VisualElement>
-                        <VisualElement class="group-spacer" />
-                        <VisualElement class="btn-group">
-                            <Button text="EN" class="lang-btn ml-0" />
-                            <Button text="FR" class="lang-btn selected" />
-                            <Button text="IL" class="lang-btn" />
-                            <Button text="ES" class="lang-btn" />
-                        </VisualElement>
-                        <Label text="85%" class="battery ml-12" />
-                    </VisualElement>
-                </VisualElement>
-                <VisualElement class="issue-row is-active mt-12">
-                    <VisualElement class="hstack">
-                        <VisualElement class="issue-icon active" />
-                        <VisualElement class="issue-copy ml-12">
-                            <Label text="Headset 2" class="row-title" />
-                            <Label text="Connected" class="row-sub active mt-2" />
-                        </VisualElement>
-                    </VisualElement>
-                    <VisualElement class="flex-spacer" />
-                    <VisualElement class="hstack buttons-right">
-                        <VisualElement class="btn-group">
-                            <Button class="icon-btn play selected ml-0" />
-                            <Button class="icon-btn reset" />
-                            <Button class="icon-btn stop" />
-                        </VisualElement>
-                        <VisualElement class="group-spacer" />
-                        <VisualElement class="btn-group">
-                            <Button text="EN" class="lang-btn selected ml-0" />
-                            <Button text="FR" class="lang-btn" />
-                            <Button text="IL" class="lang-btn" />
-                            <Button text="ES" class="lang-btn" />
-                        </VisualElement>
-                        <Label text="85%" class="battery ml-12" />
-                    </VisualElement>
-                </VisualElement>
-                <VisualElement class="issue-row is-error mt-12">
-                    <VisualElement class="hstack">
-                        <VisualElement class="issue-icon error" />
-                        <VisualElement class="issue-copy ml-12">
-                            <Label text="Headset 3" class="row-title" />
-                            <Label text="Connecting" class="row-sub error mt-2" />
-                        </VisualElement>
-                    </VisualElement>
-                    <VisualElement class="flex-spacer" />
-                    <VisualElement class="hstack buttons-right">
-                        <Label text="85%" class="battery ml-12" />
-                    </VisualElement>
-                </VisualElement>
-                <VisualElement class="issue-row is-active mt-12">
-                    <VisualElement class="hstack">
-                        <VisualElement class="issue-icon active" />
-                        <VisualElement class="issue-copy ml-12">
-                            <Label text="Headset 4" class="row-title" />
-                            <Label text="Connected" class="row-sub active mt-2" />
-                        </VisualElement>
-                    </VisualElement>
-                    <VisualElement class="flex-spacer" />
-                    <VisualElement class="hstack buttons-right">
-                        <VisualElement class="btn-group">
-                            <Button class="icon-btn play selected ml-0" />
-                            <Button class="icon-btn reset" />
-                            <Button class="icon-btn stop" />
-                        </VisualElement>
-                        <VisualElement class="group-spacer" />
-                        <VisualElement class="btn-group">
-                            <Button text="EN" class="lang-btn selected ml-0" />
-                            <Button text="FR" class="lang-btn" />
-                            <Button text="IL" class="lang-btn" />
-                            <Button text="ES" class="lang-btn" />
-                        </VisualElement>
-                        <Label text="85%" class="battery ml-12" />
-                    </VisualElement>
-                </VisualElement>
+                <VisualElement name="clientsList" class="clients-list" />
                 <VisualElement class="issue-row is-disconnected mt-12">
                     <VisualElement class="hstack">
                         <VisualElement class="issue-icon disconnected" />
