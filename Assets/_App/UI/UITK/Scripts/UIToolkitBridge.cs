@@ -330,6 +330,59 @@ public class UIToolkitBridge : MonoBehaviour
         if (sub  != null){ sub.RemoveFromClassList("error");     sub.AddToClassList("active");     }
     }
 
+    // Select a language inside ONE card by matching button.text (ignores case/whitespace)
+    public void SelectClientLanguageByText(string uuid, string code, string selectedClass = "selected")
+    {
+        if (string.IsNullOrWhiteSpace(uuid) || string.IsNullOrWhiteSpace(code)) return;
+
+        var card = _root?.Q<VisualElement>($"clientCard_{uuid}");
+        if (card == null) return;
+
+        var norm = code.Trim().ToUpperInvariant();
+        // Find all language buttons inside this card, regardless of container/naming
+        var buttons = card.Query<Button>(className: "lang-btn").ToList();
+
+        foreach (var b in buttons)
+        {
+            var txt = (b.text ?? "").Trim().ToUpperInvariant();
+            if (txt == norm) b.AddToClassList(selectedClass);
+            else             b.RemoveFromClassList(selectedClass);
+        }
+    }
+
+    // Apply the same selection to ALL cards by text
+    public void SetAllClientLanguagesByText(string containerName, string code, string selectedClass = "selected")
+    {
+        var list = GetElement(containerName);
+        if (list == null || string.IsNullOrWhiteSpace(code)) return;
+
+        foreach (var card in list.Children())
+        {
+            var name = card.name ?? "";
+            const string prefix = "clientCard_";
+            if (!name.StartsWith(prefix, StringComparison.Ordinal)) continue;
+            var uuid = name.Substring(prefix.Length);
+            SelectClientLanguageByText(uuid, code, selectedClass);
+        }
+    }
+
+    public void SetAllClientLanguages(string containerName, string code, string selectedClass = "selected")
+    {
+        var list = GetElement(containerName);
+        if (list == null || string.IsNullOrEmpty(code)) return;
+
+        foreach (var card in list.Children())
+        {
+            // card names are clientCard_<uuid>
+            var name = card.name ?? "";
+            const string prefix = "clientCard_";
+            if (!name.StartsWith(prefix, StringComparison.Ordinal)) continue;
+
+            var uuid = name.Substring(prefix.Length);
+            SelectClientLanguage(containerName, uuid, code, selectedClass);
+        }
+    }
+
     // Convenience: GUID string you can call from Playmaker
     public string NewGuid(string prefix = "") => (prefix ?? "") + System.Guid.NewGuid().ToString("N");
 }
