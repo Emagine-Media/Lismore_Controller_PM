@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,8 +11,11 @@ public class UIToolkitBridge : MonoBehaviour
 
     private VisualElement _root;
 
-    // click buffer for buttons we bind at runtime
+    // Click buffer for buttons we bind/create at runtime
     private readonly HashSet<string> _buttonClicks = new HashSet<string>(StringComparer.Ordinal);
+
+    // Field change buffer (TextField / DropdownField)
+    private readonly Dictionary<string, string> _fieldChanges = new Dictionary<string, string>(StringComparer.Ordinal);
 
     private void Awake()
     {
@@ -100,8 +104,7 @@ public class UIToolkitBridge : MonoBehaviour
     {
         var btn = GetButton(elementName);
         if (btn == null) return;
-        // local capture name
-        var id = elementName;
+        var id = elementName; // capture
         btn.clicked += () => _buttonClicks.Add(id);
     }
 
@@ -114,5 +117,105 @@ public class UIToolkitBridge : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    // ---------- Dropdown helpers (choices & change binding) ----------
+    public void SetDropdownChoices(string elementName, string[] options, int selectIndex = 0)
+    {
+        var dd = GetDropdown(elementName);
+        if (dd == null) return;
+        dd.choices = options?.ToList() ?? new List<string>();
+        if (dd.choices.Count == 0) { dd.value = string.Empty; return; }
+        if (selectIndex >= 0 && selectIndex < dd.choices.Count) dd.value = dd.choices[selectIndex];
+        else if (!dd.choices.Contains(dd.value)) dd.value = dd.choices[0];
+    }
+
+    public void SetDropdownChoicesCSV(string elementName, string csv, int selectIndex = 0)
+    {
+        var list = (csv ?? string.Empty)
+            .Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => s.Trim())
+            .Where(s => !string.IsNullOrEmpty(s))
+            .ToArray();
+        SetDropdownChoices(elementName, list, selectIndex);
+    }
+
+    public void EnsureDropdownValue(string elementName, string desiredValue)
+    {
+        var dd = GetDropdown(elementName);
+        if (dd == null) return;
+        if (dd.choices == null || dd.choices.Count == 0) return;
+        if (dd.choices.Contains(desiredValue)) dd.value = desiredValue;
+        else if (!dd.choices.Contains(dd.value)) dd.value = dd.choices[0];
+    }
+
+    public void BindTextField(string elementName)
+    {
+        var tf = GetTextField(elementName);
+        if (tf == null) return;
+        tf.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
+    }
+
+    public void BindDropdown(string elementName)
+    {
+        var dd = GetDropdown(elementName);
+        if (dd == null) return;
+        dd.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
+    }
+
+    public string ConsumeFieldChange(string elementName)
+    {
+        if (_fieldChanges.TryGetValue(elementName, out var val))
+        {
+            _fieldChanges.Remove(elementName);
+            return val;
+        }
+        return null;
+    }
+
+    // ---------- Dynamic language buttons ----------
+    // Create buttons under a container from CSV like "EN,FR,ES,IL"
+    public void RebuildLanguageButtonsFromCSV(string containerName, string csv, string baseClasses = "qbtn lang-btn")
+    {
+        var root = GetElement(containerName);
+        if (root == null) return;
+
+        root.Clear();
+
+        var tokens = (csv ?? "").Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var raw in tokens)
+        {
+            var code = raw.Trim();
+            if (string.IsNullOrEmpty(code)) continue;
+
+            var btn = new Button();
+            btn.name = "btnLang" + code;  // e.g., btnLangEN
+            btn.text = code;               // e.g., EN
+
+            foreach (var cls in (baseClasses ?? string.Empty).Split(new[]{' '}, StringSplitOptions.RemoveEmptyEntries))
+                btn.AddToClassList(cls);
+
+            var id = btn.name; // capture
+            btn.clicked += () => _buttonClicks.Add(id);
+
+            root.Add(btn);
+        }
+    }
+
+    // Add 'selected' class to the matching language button and remove from others
+    public void SelectLanguageButton(string containerName, string code, string selectedClass = "selected")
+    {
+        var root = GetElement(containerName);
+        if (root == null) return;
+
+        foreach (var child in root.Children())
+        {
+            if (child is Button b)
+            {
+                bool isMatch = b.name.Equals("btnLang" + code, StringComparison.OrdinalIgnoreCase);
+                if (isMatch) b.AddToClassList(selectedClass);
+                else b.RemoveFromClassList(selectedClass);
+            }
+        }
     }
 }

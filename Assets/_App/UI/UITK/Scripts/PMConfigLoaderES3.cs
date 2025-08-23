@@ -8,9 +8,12 @@ using HutongGames.PlayMaker;
 public class PMConfig
 {
     public Dictionary<string, string> Strings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-    public Dictionary<string, int>    Ints    = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-    public Dictionary<string, float>  Floats  = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
-    public Dictionary<string, bool>   Bools   = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> Ints = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, float> Floats = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, bool> Bools = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+
+    // NEW: explicit list of available languages
+    public List<string> Languages = new List<string>();
 }
 
 public class PMConfigLoaderES3 : MonoBehaviour
@@ -76,6 +79,9 @@ public class PMConfigLoaderES3 : MonoBehaviour
         foreach (var v in vars.FloatVariables)  if (v != null) cfg.Floats[v.Name]  = v.Value;
         foreach (var v in vars.BoolVariables)   if (v != null) cfg.Bools[v.Name]   = v.Value;
 
+        // Set default available languages
+        cfg.Languages.AddRange(new[] { "EN", "FR", "ES", "IL" });
+
         return cfg;
     }
 
@@ -107,6 +113,11 @@ public class PMConfigLoaderES3 : MonoBehaviour
             if (v != null) v.Value = kv.Value;
             else if (logActions) Debug.LogWarning($"[PMConfigLoaderES3] Bool global '{kv.Key}' not found.");
         }
+
+        // Optional: expose Languages list to a Global String so Playmaker FSMs can use it
+        var langsCsv = string.Join(",", cfg.Languages);
+        var langsGlobal = vars.GetFsmString("AvailableLanguages");
+        if (langsGlobal != null) langsGlobal.Value = langsCsv;
     }
 
     void SaveConfig(PMConfig cfg)
