@@ -4,10 +4,11 @@
     <VisualElement class="app-root">
         <VisualElement class="tablet-left">
             <VisualElement class="issues card">
-                <VisualElement class="card-header">
+                <VisualElement class="card-header" style="flex-direction: row; align-items: center; justify-content: space-between;">
                     <Label text="Headsets Connected" class="title text-l" />
                     <VisualElement class="icon-ghost" />
                     <Label text="10" name="lblClients" class="title text-l" />
+                    <Label text="Playtime Left - 5:05" class="hint" />
                 </VisualElement>
                 <VisualElement class="issue-row is-active mt-12">
                     <VisualElement class="hstack">
@@ -121,18 +122,6 @@
                 <Label name="lblVersion" text=" [version]" class="role mt-8" />
                 <Label name="lblLanguage" text="[lang]" class="hint mt-6" />
                 <Label text="[server status]" name="lblServer" focusable="true" class="title text-l" />
-            </VisualElement>
-            <VisualElement class="reports card mt-24">
-                <VisualElement class="stat-row">
-                    <Label text="3" class="stat-big" />
-                </VisualElement>
-                <VisualElement class="progress mt-12">
-                    <Label text="Playtime Left - 5:05" class="hint" />
-                    <VisualElement class="track mt-6">
-                        <VisualElement class="fill w-69p" />
-                        <VisualElement class="wave" />
-                    </VisualElement>
-                </VisualElement>
             </VisualElement>
             <VisualElement class="reports card mt-24">
                 <Label text="Experience Control" class="title text-l" />
