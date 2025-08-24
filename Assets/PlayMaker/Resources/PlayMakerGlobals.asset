@@ -114,3 +114,4 @@ MonoBehaviour:
   - CLIENT_JOINED
   - CLIENT_LEFT
   - PLAY_ALL
+  - CLIENT_PLAY

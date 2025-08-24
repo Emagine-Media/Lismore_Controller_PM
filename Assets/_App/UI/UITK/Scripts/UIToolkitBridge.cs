@@ -24,7 +24,9 @@ public class UIToolkitBridge : MonoBehaviour
         _root = uiDocument != null ? uiDocument.rootVisualElement : null;
     }
 
-    // ---------- Alphabetical helper methods below ----------
+    // =============================
+    // Methods in alphabetical order
+    // =============================
 
     public void AddClass(string elementName, string className)
     {
@@ -52,10 +54,10 @@ public class UIToolkitBridge : MonoBehaviour
             card.AddToClassList("is-active");
             card.AddToClassList("mt-12");
 
-            // LEFT
+            // LEFT SIDE
             var hstack = new VisualElement(); hstack.AddToClassList("hstack");
             var icon = new VisualElement();
-            icon.name = $"issueIcon_{uuid}";                 // named so FSMs can target it
+            icon.name = $"issueIcon_{uuid}";
             icon.AddToClassList("issue-icon");
             icon.AddToClassList("active");
             var copy = new VisualElement(); copy.AddToClassList("issue-copy"); copy.AddToClassList("ml-12");
@@ -67,20 +69,18 @@ public class UIToolkitBridge : MonoBehaviour
             // SPACER
             var spacer = new VisualElement(); spacer.AddToClassList("flex-spacer");
 
-            // RIGHT
+            // RIGHT SIDE
             var right = new VisualElement(); right.AddToClassList("hstack"); right.AddToClassList("buttons-right");
-            var btnGroup = new VisualElement();
-            btnGroup.name = $"btnGroup_{uuid}";               // named for enable/disable targeting
-            btnGroup.AddToClassList("btn-group");
+            var btnGroup = new VisualElement { name = $"btnGroup_{uuid}" }; btnGroup.AddToClassList("btn-group");
             var btnPlay  = new Button(){ name = $"btnPlay_{uuid}"  }; btnPlay.AddToClassList("icon-btn"); btnPlay.AddToClassList("play"); btnPlay.AddToClassList("ml-0");
             var btnReset = new Button(){ name = $"btnReset_{uuid}" }; btnReset.AddToClassList("icon-btn"); btnReset.AddToClassList("reset");
             var btnStop  = new Button(){ name = $"btnStop_{uuid}"  }; btnStop.AddToClassList("icon-btn"); btnStop.AddToClassList("stop");
             var idPlay = btnPlay.name;  btnPlay.clicked  += () => _buttonClicks.Add(idPlay);
             var idReset= btnReset.name; btnReset.clicked += () => _buttonClicks.Add(idReset);
             var idStop = btnStop.name;  btnStop.clicked  += () => _buttonClicks.Add(idStop);
-            btnGroup.Add(btnPlay); btnGroup.Add(btnReset); btnGroup.Add(btnStop);
+            btnGroup.Add(btnPlay); btnGroup.Add(btnReset); 
 
-            // Language group container for this card
+            // Language group for this card
             var langGroup = new VisualElement { name = $"langGroup_{uuid}" }; langGroup.AddToClassList("btn-group");
 
             // Battery label
@@ -196,6 +196,21 @@ public class UIToolkitBridge : MonoBehaviour
         return root != null ? root.childCount : 0;
     }
 
+    public string GetAllClientUUIDsCsv(string containerName)
+    {
+        var list = GetElement(containerName);
+        if (list == null) return string.Empty;
+        var uuids = new List<string>();
+        foreach (var child in list.Children())
+        {
+            var name = child.name ?? string.Empty;
+            const string prefix = "clientCard_";
+            if (name.StartsWith(prefix, StringComparison.Ordinal))
+                uuids.Add(name.Substring(prefix.Length));
+        }
+        return string.Join(",", uuids);
+    }
+
     public DropdownField GetDropdown(string name) => _root?.Q<DropdownField>(name);
 
     public VisualElement GetElement(string name) => _root?.Q<VisualElement>(name);
@@ -204,11 +219,21 @@ public class UIToolkitBridge : MonoBehaviour
 
     public VisualElement GetRoot() => _root;
 
-    public TextElement GetTextElement(string name) => _root?.Q<TextElement>(name);
-
-    public TextField GetTextField(string name) => _root?.Q<TextField>(name);
-
     public string NewGuid(string prefix = "") => (prefix ?? "") + System.Guid.NewGuid().ToString("N");
+
+    public void RemoveClass(string elementName, string className)
+    {
+        var el = GetElement(elementName);
+        el?.RemoveFromClassList(className);
+    }
+
+    public void RemoveClientCardByUUID(string containerName, string uuid)
+    {
+        var list = GetElement(containerName);
+        if (list == null) return;
+        var card = list.Q<VisualElement>($"clientCard_{uuid}");
+        if (card != null) list.Remove(card);
+    }
 
     public void RebuildLanguageButtonsFromCSV(string containerName, string csv, string baseClasses = "qbtn lang-btn")
     {
@@ -228,20 +253,6 @@ public class UIToolkitBridge : MonoBehaviour
             var id = btn.name; btn.clicked += () => _buttonClicks.Add(id);
             root.Add(btn);
         }
-    }
-
-    public void RemoveClientCardByUUID(string containerName, string uuid)
-    {
-        var list = GetElement(containerName);
-        if (list == null) return;
-        var card = list.Q<VisualElement>($"clientCard_{uuid}");
-        if (card != null) list.Remove(card);
-    }
-
-    public void RemoveClass(string elementName, string className)
-    {
-        var el = GetElement(elementName);
-        el?.RemoveFromClassList(className);
     }
 
     public void SelectClientLanguage(string containerName, string uuid, string code, string selectedClass = "selected")
@@ -372,6 +383,25 @@ public class UIToolkitBridge : MonoBehaviour
         if (on) btn.AddToClassList(selectedClass); else btn.RemoveFromClassList(selectedClass);
     }
 
+    // Toggle the play button visual between play/pause icon classes and selected state
+    public void SetClientPlayVisual(string uuid, bool isPlaying, string selectedClass = "selected")
+    {
+        var btn = _root?.Q<Button>($"btnPlay_{uuid}");
+        if (btn == null) return;
+        if (isPlaying)
+        {
+            btn.RemoveFromClassList("play");
+            btn.AddToClassList("pause");
+            btn.AddToClassList(selectedClass);
+        }
+        else
+        {
+            btn.RemoveFromClassList("pause");
+            btn.AddToClassList("play");
+            btn.RemoveFromClassList(selectedClass);
+        }
+    }
+
     public void SetClientStatusGreen(string uuid)
     {
         var card = _root?.Q<VisualElement>($"clientCard_{uuid}");
@@ -419,6 +449,10 @@ public class UIToolkitBridge : MonoBehaviour
         var el = GetTextElement(elementName);
         if (el != null) el.text = text ?? string.Empty;
     }
+
+    public TextElement GetTextElement(string name) => _root?.Q<TextElement>(name);
+
+    public TextField GetTextField(string name) => _root?.Q<TextField>(name);
 
     public void SetVisible(string elementName, bool visible)
     {
