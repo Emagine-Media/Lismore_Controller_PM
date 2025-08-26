@@ -360,6 +360,37 @@ public class UIToolkitBridge : MonoBehaviour
             SetClientPlaySelected(uuid, on, selectedClass);
         }
     }
+    // Switch ONE card's Play button icon between "play" and "stop"
+    public void SetClientPlayIconMode(string uuid, string mode /*"play" or "stop"*/)
+    {
+        var btn = _root?.Q<Button>($"btnPlay_{uuid}");
+        if (btn == null) return;
+
+        // Ensure only one of these is present
+        btn.RemoveFromClassList("play");
+        btn.RemoveFromClassList("stop");
+
+        if (string.Equals(mode, "stop", StringComparison.OrdinalIgnoreCase))
+            btn.AddToClassList("stop");
+        else
+            btn.AddToClassList("play");
+    }
+
+    // Switch ALL cards' Play button icon mode together
+    public void SetAllClientPlayIconMode(string containerName, string mode /*"play" or "stop"*/)
+    {
+        var list = GetElement(containerName);
+        if (list == null) return;
+
+        foreach (var card in list.Children())
+        {
+            var name = card.name ?? "";
+            const string prefix = "clientCard_";
+            if (!name.StartsWith(prefix, StringComparison.Ordinal)) continue;
+            var uuid = name.Substring(prefix.Length);
+            SetClientPlayIconMode(uuid, mode);
+        }
+    }
 
     public void SetClientButtonsEnabled(string uuid, bool enabled)
     {
