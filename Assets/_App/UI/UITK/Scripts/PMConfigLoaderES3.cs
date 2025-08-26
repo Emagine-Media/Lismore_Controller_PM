@@ -12,7 +12,7 @@ public class PMConfig
     public Dictionary<string, float> Floats = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, bool> Bools = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
 
-    // NEW: explicit list of available languages
+    // Explicit list of available languages
     public List<string> Languages = new List<string>();
 }
 
@@ -57,6 +57,7 @@ public class PMConfigLoaderES3 : MonoBehaviour
             if (applyOnStart && File.Exists(FullPath))
             {
                 var loaded = LoadConfig();
+                EnsureLanguages(loaded);          // make sure Languages list is valid
                 ApplyToGlobals(loaded);
                 if (logActions) Debug.Log($"[PMConfigLoaderES3] Applied config from:\n{FullPath}");
             }
@@ -69,6 +70,7 @@ public class PMConfigLoaderES3 : MonoBehaviour
         }
     }
 
+    // ----------------- Build defaults -----------------
     PMConfig BuildFromGlobals()
     {
         var cfg = new PMConfig();
@@ -79,18 +81,24 @@ public class PMConfigLoaderES3 : MonoBehaviour
         foreach (var v in vars.FloatVariables)  if (v != null) cfg.Floats[v.Name]  = v.Value;
         foreach (var v in vars.BoolVariables)   if (v != null) cfg.Bools[v.Name]   = v.Value;
 
-        // Set default available languages
-        cfg.Languages.AddRange(new[] { "EN", "FR", "ES", "IL" });
+        // Defaults for first run
+        if (cfg.Languages == null || cfg.Languages.Count == 0)
+            cfg.Languages = new List<string> { "EN", "FR", "ES", "IL" };
 
         return cfg;
     }
 
+    // ----------------- Apply to PlayMaker -----------------
     void ApplyToGlobals(PMConfig cfg)
     {
         var vars = PlayMakerGlobals.Instance.Variables;
 
         foreach (var kv in cfg.Strings)
         {
+            // DO NOT mirror this key from Strings; we set it from cfg.Languages below.
+            if (string.Equals(kv.Key, "AvailableLanguages", StringComparison.OrdinalIgnoreCase))
+                continue;
+            
             var v = vars.GetFsmString(kv.Key) ?? FindFsmStringIgnoreCase(kv.Key);
             if (v != null) v.Value = kv.Value;
             else if (logActions) Debug.LogWarning($"[PMConfigLoaderES3] String global '{kv.Key}' not found.");
@@ -114,15 +122,57 @@ public class PMConfigLoaderES3 : MonoBehaviour
             else if (logActions) Debug.LogWarning($"[PMConfigLoaderES3] Bool global '{kv.Key}' not found.");
         }
 
-        // Optional: expose Languages list to a Global String so Playmaker FSMs can use it
-        var langsCsv = string.Join(",", cfg.Languages);
-        var langsGlobal = vars.GetFsmString("AvailableLanguages");
-        if (langsGlobal != null) langsGlobal.Value = langsCsv;
+        // Push languages to global only if valid
+        if (cfg.Languages != null && cfg.Languages.Count > 0)
+        {
+            var langsCsv = string.Join(",", cfg.Languages);
+            var langsGlobal = vars.GetFsmString("AvailableLanguages");
+            if (langsGlobal != null) langsGlobal.Value = langsCsv;
+            if (logActions) Debug.Log($"[PMConfigLoaderES3] AvailableLanguages set to: {langsCsv}");
+        }
+        else if (logActions)
+        {
+            Debug.LogWarning("[PMConfigLoaderES3] Languages list empty; not overriding AvailableLanguages.");
+        }
+    }
+
+    // ----------------- Helpers -----------------
+    List<string> ParseCsv(string csv)
+    {
+        if (string.IsNullOrWhiteSpace(csv)) return new List<string>();
+        var list = new List<string>();
+        foreach (var t in csv.Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries))
+        {
+            var s = t.Trim();
+            if (!string.IsNullOrEmpty(s)) list.Add(s);
+        }
+        return list;
+    }
+
+    void EnsureLanguages(PMConfig cfg)
+    {
+        if (cfg.Languages == null || cfg.Languages.Count == 0)
+        {
+            var g = PlayMakerGlobals.Instance.Variables.GetFsmString("AvailableLanguages");
+            var fromGlobals = g != null ? ParseCsv(g.Value) : new List<string>();
+            if (fromGlobals.Count > 0)
+            {
+                cfg.Languages = fromGlobals;
+                if (logActions) Debug.Log("[PMConfigLoaderES3] Recovered Languages from PlayMaker globals.");
+            }
+        }
+
+        if (cfg.Languages == null || cfg.Languages.Count == 0)
+        {
+            cfg.Languages = new List<string> { "EN", "FR", "ES", "IL" };
+            if (logActions) Debug.Log("[PMConfigLoaderES3] Languages missing; seeded defaults EN,FR,ES,IL.");
+        }
     }
 
     void SaveConfig(PMConfig cfg)
     {
-        // ES3 writes JSON by default; key name "config" keeps it tidy.
+         if (cfg.Strings.ContainsKey("AvailableLanguages"))
+        cfg.Strings.Remove("AvailableLanguages"); //
         ES3.Save<PMConfig>("config", cfg, FullPath);
     }
 

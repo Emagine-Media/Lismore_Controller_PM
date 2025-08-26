@@ -443,6 +443,25 @@ public class UIToolkitBridge : MonoBehaviour
             .ToArray();
         SetDropdownChoices(elementName, list, selectIndex);
     }
+        // Enable or disable a single element by name
+    public void SetEnabled(string elementName, bool enabled)
+    {
+        var el = GetElement(elementName);
+        if (el != null)
+            el.SetEnabled(enabled);
+    }
+
+    // Enable or disable ALL children of a container (like a toolbar)
+    public void SetChildrenEnabled(string containerName, bool enabled)
+    {
+        var root = GetElement(containerName);
+        if (root == null) return;
+
+        foreach (var child in root.Children())
+        {
+            child.SetEnabled(enabled);
+        }
+    }
 
     public void SetText(string elementName, string text)
     {
