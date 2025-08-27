@@ -1,0 +1,20 @@
+{
+  "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-2055451689-0": {
+    "GameObjectId": "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-2055451689-0",
+    "CommentText": "For Development purposes, hotkeys to mimic headsets and debug info",
+    "AssetGUID": "bf1b7c4257b084f819182f6b06621787",
+    "UniqueItemID": "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-2055451689-0"
+  },
+  "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-1614451644-0": {
+    "GameObjectId": "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-1614451644-0",
+    "CommentText": "Everything server based and broadcasts",
+    "AssetGUID": "bf1b7c4257b084f819182f6b06621787",
+    "UniqueItemID": "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-1614451644-0"
+  },
+  "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-1277416983-0": {
+    "GameObjectId": "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-1277416983-0",
+    "CommentText": "For everything UI based\n",
+    "AssetGUID": "bf1b7c4257b084f819182f6b06621787",
+    "UniqueItemID": "GlobalObjectId_V1-2-bf1b7c4257b084f819182f6b06621787-1277416983-0"
+  }
+}

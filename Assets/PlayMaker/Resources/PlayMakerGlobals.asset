@@ -115,3 +115,5 @@ MonoBehaviour:
   - CLIENT_LEFT
   - PLAY_ALL
   - CLIENT_PLAY
+  - STOP_ALL
+  - PAUSE_ALL
