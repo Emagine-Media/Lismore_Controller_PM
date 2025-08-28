@@ -7,7 +7,16 @@ using UnityEngine.UIElements;
 [DisallowMultipleComponent]
 public class UIToolkitBridge : MonoBehaviour
 {
-    [Header("References")] public UIDocument uiDocument;
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Fields
+    // ─────────────────────────────────────────────────────────────────────────────
+    [Header("References")]
+    public UIDocument uiDocument;
+
+    [Header("Icons")]
+    public Sprite iconPlay;    // assign play sprite (SVG or PNG imported as Sprite)
+    public Sprite iconPause;   // assign pause sprite
+    public Sprite iconStop;    // assign stop sprite (optional)
 
     private VisualElement _root;
 
@@ -17,6 +26,9 @@ public class UIToolkitBridge : MonoBehaviour
     // Field change buffer (TextField, DropdownField)
     private readonly Dictionary<string, string> _fieldChanges = new Dictionary<string, string>(StringComparer.Ordinal);
 
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Unity
+    // ─────────────────────────────────────────────────────────────────────────────
     void Awake()
     {
         if (uiDocument == null)
@@ -24,17 +36,43 @@ public class UIToolkitBridge : MonoBehaviour
         _root = uiDocument != null ? uiDocument.rootVisualElement : null;
     }
 
-    // =============================
-    // Methods in alphabetical order
-    // =============================
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Helpers (internal)
+    // ─────────────────────────────────────────────────────────────────────────────
+    private void ApplyIcon(Button b, string mode)
+    {
+        if (b == null) return;
 
+        // normalize classes
+        b.RemoveFromClassList("play");
+        b.RemoveFromClassList("pause");
+        b.RemoveFromClassList("stop");
+
+        Sprite s = iconPlay;
+        var m = (mode ?? "play").ToLowerInvariant();
+        if (m == "pause") s = iconPause;
+        else if (m == "stop") s = iconStop;
+        else m = "play";
+
+        b.AddToClassList(m);
+
+        if (s != null)
+            b.style.backgroundImage = new StyleBackground(s);
+        else
+            b.style.backgroundImage = new StyleBackground(); // Unity 6-safe "none"
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Public API (alphabetical)
+    // ─────────────────────────────────────────────────────────────────────────────
+
+    // A
     public void AddClass(string elementName, string className)
     {
         var el = GetElement(elementName);
         el?.AddToClassList(className);
     }
 
-    // Add a numbered card (legacy helper)
     public void AddClientCard(string containerName, string displayIndex)
     {
         AddOrUpdateClientCard(containerName, displayIndex, $"Headset {displayIndex}", null, null);
@@ -54,40 +92,41 @@ public class UIToolkitBridge : MonoBehaviour
             card.AddToClassList("is-active");
             card.AddToClassList("mt-12");
 
-            // LEFT SIDE
+            // LEFT
             var hstack = new VisualElement(); hstack.AddToClassList("hstack");
-            var icon = new VisualElement();
-            icon.name = $"issueIcon_{uuid}";
+            var icon = new VisualElement { name = $"issueIcon_{uuid}" };
             icon.AddToClassList("issue-icon");
             icon.AddToClassList("active");
             var copy = new VisualElement(); copy.AddToClassList("issue-copy"); copy.AddToClassList("ml-12");
             var lblTitle = new Label("") { name = $"lblClientTitle_{uuid}" }; lblTitle.AddToClassList("row-title");
-            var lblSub   = new Label("Connected") { name = $"lblClientSub_{uuid}" }; lblSub.AddToClassList("row-sub"); lblSub.AddToClassList("active"); lblSub.AddToClassList("mt-2");
+            var lblSub = new Label("Connected") { name = $"lblClientSub_{uuid}" }; lblSub.AddToClassList("row-sub"); lblSub.AddToClassList("active"); lblSub.AddToClassList("mt-2");
             copy.Add(lblTitle); copy.Add(lblSub);
             hstack.Add(icon); hstack.Add(copy);
 
             // SPACER
             var spacer = new VisualElement(); spacer.AddToClassList("flex-spacer");
 
-            // RIGHT SIDE
+            // RIGHT
             var right = new VisualElement(); right.AddToClassList("hstack"); right.AddToClassList("buttons-right");
             var btnGroup = new VisualElement { name = $"btnGroup_{uuid}" }; btnGroup.AddToClassList("btn-group");
-            var btnPlay  = new Button(){ name = $"btnPlay_{uuid}"  }; btnPlay.AddToClassList("icon-btn"); btnPlay.AddToClassList("play"); btnPlay.AddToClassList("ml-0");
-            var btnReset = new Button(){ name = $"btnReset_{uuid}" }; btnReset.AddToClassList("icon-btn"); btnReset.AddToClassList("reset");
-            var btnStop  = new Button(){ name = $"btnStop_{uuid}"  }; btnStop.AddToClassList("icon-btn"); btnStop.AddToClassList("stop");
-            var idPlay = btnPlay.name;  btnPlay.clicked  += () => _buttonClicks.Add(idPlay);
-            var idReset= btnReset.name; btnReset.clicked += () => _buttonClicks.Add(idReset);
-            var idStop = btnStop.name;  btnStop.clicked  += () => _buttonClicks.Add(idStop);
-            btnGroup.Add(btnPlay); btnGroup.Add(btnReset); 
 
-            // Language group for this card
+            var btnPlay = new Button() { name = $"btnPlay_{uuid}" }; btnPlay.AddToClassList("icon-btn"); btnPlay.AddToClassList("play"); btnPlay.AddToClassList("ml-0");
+            var btnStop = new Button() { name = $"btnStop_{uuid}" }; btnStop.AddToClassList("icon-btn"); btnStop.AddToClassList("stop");
+
+            // initial icon graphic
+            ApplyIcon(btnPlay, "play");
+
+            var idPlay = btnPlay.name; btnPlay.clicked += () => _buttonClicks.Add(idPlay);
+            var idStop = btnStop.name; btnStop.clicked += () => _buttonClicks.Add(idStop);
+
+            btnGroup.Add(btnPlay);
+
             var langGroup = new VisualElement { name = $"langGroup_{uuid}" }; langGroup.AddToClassList("btn-group");
 
-            // Battery label
             var battery = new Label("85%") { name = $"lblBattery_{uuid}" }; battery.AddToClassList("battery"); battery.AddToClassList("ml-12");
 
             right.Add(btnGroup);
-            right.Add(new VisualElement(){ name=$"groupSpacer_{uuid}", pickingMode = PickingMode.Ignore });
+            right.Add(new VisualElement() { name = $"groupSpacer_{uuid}", pickingMode = PickingMode.Ignore });
             right.Add(langGroup);
             right.Add(battery);
 
@@ -151,6 +190,12 @@ public class UIToolkitBridge : MonoBehaviour
         SelectClientLanguage("clientsList", uuid, defaultLang);
     }
 
+    public void ClearBackground(string elementName)
+    {
+        var btn = GetButton(elementName);
+        if (btn != null) btn.style.backgroundImage = new StyleBackground(); // clears any sprite
+    }
+    // C
     public bool ConsumeButtonClicked(string elementName)
     {
         if (_buttonClicks.Contains(elementName))
@@ -171,6 +216,7 @@ public class UIToolkitBridge : MonoBehaviour
         return null;
     }
 
+    // E
     public void EnsureClientCards(string containerName, int targetCount)
     {
         var root = GetElement(containerName);
@@ -187,23 +233,15 @@ public class UIToolkitBridge : MonoBehaviour
         if (dd.choices.Contains(desiredValue)) dd.value = desiredValue;
         else if (!dd.choices.Contains(dd.value)) dd.value = dd.choices[0];
     }
-
-    public Button GetButton(string name) => _root?.Q<Button>(name);
-
-    public int GetChildCount(string containerName)
-    {
-        var root = GetElement(containerName);
-        return root != null ? root.childCount : 0;
-    }
-
     public string GetAllClientUUIDsCsv(string containerName)
     {
         var list = GetElement(containerName);
         if (list == null) return string.Empty;
+
         var uuids = new List<string>();
         foreach (var child in list.Children())
         {
-            var name = child.name ?? string.Empty;
+            var name = child.name ?? "";
             const string prefix = "clientCard_";
             if (name.StartsWith(prefix, StringComparison.Ordinal))
                 uuids.Add(name.Substring(prefix.Length));
@@ -211,15 +249,51 @@ public class UIToolkitBridge : MonoBehaviour
         return string.Join(",", uuids);
     }
 
+    // G (getters)
+    public Button GetButton(string name) => _root?.Q<Button>(name);
+    public int GetChildCount(string containerName)
+    {
+        var root = GetElement(containerName);
+        return root != null ? root.childCount : 0;
+    }
     public DropdownField GetDropdown(string name) => _root?.Q<DropdownField>(name);
-
     public VisualElement GetElement(string name) => _root?.Q<VisualElement>(name);
-
     public Label GetLabel(string name) => _root?.Q<Label>(name);
-
     public VisualElement GetRoot() => _root;
+    public TextElement GetTextElement(string name) => _root?.Q<TextElement>(name);
+    public TextField GetTextField(string name) => _root?.Q<TextField>(name);
 
+    // I
+    public void InitTopIcons()
+    {
+        ApplyIcon(GetButton("btnPlayAll"), "play");
+        ApplyIcon(GetButton("btnPauseAll"), "pause");
+        ApplyIcon(GetButton("btnStopAll"), "stop");
+    }
+
+    // N
     public string NewGuid(string prefix = "") => (prefix ?? "") + System.Guid.NewGuid().ToString("N");
+
+    // R
+    public void RebuildLanguageButtonsFromCSV(string containerName, string csv, string baseClasses = "qbtn lang-btn")
+    {
+        var root = GetElement(containerName);
+        if (root == null) return;
+        root.Clear();
+        var tokens = (csv ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var raw in tokens)
+        {
+            var code = raw.Trim();
+            if (string.IsNullOrEmpty(code)) continue;
+            var btn = new Button();
+            btn.name = "btnLang" + code;  // e.g., btnLangEN
+            btn.text = code;
+            foreach (var cls in (baseClasses ?? string.Empty).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                btn.AddToClassList(cls);
+            var id = btn.name; btn.clicked += () => _buttonClicks.Add(id);
+            root.Add(btn);
+        }
+    }
 
     public void RemoveClass(string elementName, string className)
     {
@@ -235,26 +309,7 @@ public class UIToolkitBridge : MonoBehaviour
         if (card != null) list.Remove(card);
     }
 
-    public void RebuildLanguageButtonsFromCSV(string containerName, string csv, string baseClasses = "qbtn lang-btn")
-    {
-        var root = GetElement(containerName);
-        if (root == null) return;
-        root.Clear();
-        var tokens = (csv ?? "").Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var raw in tokens)
-        {
-            var code = raw.Trim();
-            if (string.IsNullOrEmpty(code)) continue;
-            var btn = new Button();
-            btn.name = "btnLang" + code;  // e.g., btnLangEN
-            btn.text = code;
-            foreach (var cls in (baseClasses ?? string.Empty).Split(new[]{' '}, StringSplitOptions.RemoveEmptyEntries))
-                btn.AddToClassList(cls);
-            var id = btn.name; btn.clicked += () => _buttonClicks.Add(id);
-            root.Add(btn);
-        }
-    }
-
+    // S
     public void SelectClientLanguage(string containerName, string uuid, string code, string selectedClass = "selected")
     {
         var langGroup = _root?.Q<VisualElement>($"langGroup_{uuid}");
@@ -269,7 +324,6 @@ public class UIToolkitBridge : MonoBehaviour
         }
     }
 
-    // Select a language inside ONE card by matching button.text (ignores case/whitespace)
     public void SelectClientLanguageByText(string uuid, string code, string selectedClass = "selected")
     {
         if (string.IsNullOrWhiteSpace(uuid) || string.IsNullOrWhiteSpace(code)) return;
@@ -284,7 +338,7 @@ public class UIToolkitBridge : MonoBehaviour
         {
             var txt = (b.text ?? "").Trim().ToUpperInvariant();
             if (txt == norm) b.AddToClassList(selectedClass);
-            else             b.RemoveFromClassList(selectedClass);
+            else b.RemoveFromClassList(selectedClass);
         }
     }
 
@@ -307,11 +361,12 @@ public class UIToolkitBridge : MonoBehaviour
     {
         var list = GetElement(containerName);
         if (list == null) return;
-        foreach (var child in list.Children())
+        foreach (var card in list.Children())
         {
-            var name = child.name ?? string.Empty;
-            if (!name.StartsWith("clientCard_", StringComparison.Ordinal)) continue;
-            child.SetEnabled(enabled);
+            var name = card.name ?? "";
+            const string prefix = "clientCard_";
+            if (!name.StartsWith(prefix, StringComparison.Ordinal)) continue;
+            card.SetEnabled(enabled);
         }
     }
 
@@ -346,6 +401,21 @@ public class UIToolkitBridge : MonoBehaviour
         }
     }
 
+    public void SetAllClientPlayIconMode(string containerName, string mode /* play | pause | stop */)
+    {
+        var list = GetElement(containerName);
+        if (list == null) return;
+
+        foreach (var card in list.Children())
+        {
+            var name = card.name ?? "";
+            const string prefix = "clientCard_";
+            if (!name.StartsWith(prefix, StringComparison.Ordinal)) continue;
+            var uuid = name.Substring(prefix.Length);
+            SetClientPlayIconMode(uuid, mode);
+        }
+    }
+
     public void SetAllClientPlaySelected(string containerName, bool on, string selectedClass = "selected")
     {
         var list = GetElement(containerName);
@@ -358,37 +428,6 @@ public class UIToolkitBridge : MonoBehaviour
             if (!name.StartsWith(prefix, StringComparison.Ordinal)) continue;
             var uuid = name.Substring(prefix.Length);
             SetClientPlaySelected(uuid, on, selectedClass);
-        }
-    }
-    // Switch ONE card's Play button icon between "play" and "stop"
-    public void SetClientPlayIconMode(string uuid, string mode /*"play" or "stop"*/)
-    {
-        var btn = _root?.Q<Button>($"btnPlay_{uuid}");
-        if (btn == null) return;
-
-        // Ensure only one of these is present
-        btn.RemoveFromClassList("play");
-        btn.RemoveFromClassList("stop");
-
-        if (string.Equals(mode, "stop", StringComparison.OrdinalIgnoreCase))
-            btn.AddToClassList("stop");
-        else
-            btn.AddToClassList("play");
-    }
-
-    // Switch ALL cards' Play button icon mode together
-    public void SetAllClientPlayIconMode(string containerName, string mode /*"play" or "stop"*/)
-    {
-        var list = GetElement(containerName);
-        if (list == null) return;
-
-        foreach (var card in list.Children())
-        {
-            var name = card.name ?? "";
-            const string prefix = "clientCard_";
-            if (!name.StartsWith(prefix, StringComparison.Ordinal)) continue;
-            var uuid = name.Substring(prefix.Length);
-            SetClientPlayIconMode(uuid, mode);
         }
     }
 
@@ -407,6 +446,12 @@ public class UIToolkitBridge : MonoBehaviour
         card.SetEnabled(enabled);
     }
 
+    public void SetClientPlayIconMode(string uuid, string mode /* play | pause | stop */)
+    {
+        var btn = _root?.Q<Button>($"btnPlay_{uuid}");
+        ApplyIcon(btn, mode);
+    }
+
     public void SetClientPlaySelected(string uuid, bool on, string selectedClass = "selected")
     {
         var btn = _root?.Q<Button>($"btnPlay_{uuid}");
@@ -414,45 +459,26 @@ public class UIToolkitBridge : MonoBehaviour
         if (on) btn.AddToClassList(selectedClass); else btn.RemoveFromClassList(selectedClass);
     }
 
-    // Toggle the play button visual between play/pause icon classes and selected state
-    public void SetClientPlayVisual(string uuid, bool isPlaying, string selectedClass = "selected")
-    {
-        var btn = _root?.Q<Button>($"btnPlay_{uuid}");
-        if (btn == null) return;
-        if (isPlaying)
-        {
-            btn.RemoveFromClassList("play");
-            btn.AddToClassList("pause");
-            btn.AddToClassList(selectedClass);
-        }
-        else
-        {
-            btn.RemoveFromClassList("pause");
-            btn.AddToClassList("play");
-            btn.RemoveFromClassList(selectedClass);
-        }
-    }
-
     public void SetClientStatusGreen(string uuid)
     {
         var card = _root?.Q<VisualElement>($"clientCard_{uuid}");
         var icon = _root?.Q<VisualElement>($"issueIcon_{uuid}");
-        var sub  = _root?.Q<Label>($"lblClientSub_{uuid}");
+        var sub = _root?.Q<Label>($"lblClientSub_{uuid}");
 
-        if (card != null){ card.RemoveFromClassList("is-error"); card.AddToClassList("is-active"); }
-        if (icon != null){ icon.RemoveFromClassList("error");    icon.AddToClassList("active");    }
-        if (sub  != null){ sub.RemoveFromClassList("error");     sub.AddToClassList("active");     }
+        if (card != null) { card.RemoveFromClassList("is-error"); card.AddToClassList("is-active"); }
+        if (icon != null) { icon.RemoveFromClassList("error"); icon.AddToClassList("active"); }
+        if (sub != null) { sub.RemoveFromClassList("error"); sub.AddToClassList("active"); }
     }
 
     public void SetClientStatusRed(string uuid)
     {
         var card = _root?.Q<VisualElement>($"clientCard_{uuid}");
         var icon = _root?.Q<VisualElement>($"issueIcon_{uuid}");
-        var sub  = _root?.Q<Label>($"lblClientSub_{uuid}");
+        var sub = _root?.Q<Label>($"lblClientSub_{uuid}");
 
-        if (card != null){ card.RemoveFromClassList("is-active"); card.AddToClassList("is-error"); }
-        if (icon != null){ icon.RemoveFromClassList("active");    icon.AddToClassList("error");    }
-        if (sub  != null){ sub.RemoveFromClassList("active");     sub.AddToClassList("error");     }
+        if (card != null) { card.RemoveFromClassList("is-active"); card.AddToClassList("is-error"); }
+        if (icon != null) { icon.RemoveFromClassList("active"); icon.AddToClassList("error"); }
+        if (sub != null) { sub.RemoveFromClassList("active"); sub.AddToClassList("error"); }
     }
 
     public void SetDropdownChoices(string elementName, string[] options, int selectIndex = 0)
@@ -468,30 +494,17 @@ public class UIToolkitBridge : MonoBehaviour
     public void SetDropdownChoicesCSV(string elementName, string csv, int selectIndex = 0)
     {
         var list = (csv ?? string.Empty)
-            .Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries)
+            .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
             .Select(s => s.Trim())
             .Where(s => !string.IsNullOrEmpty(s))
             .ToArray();
         SetDropdownChoices(elementName, list, selectIndex);
     }
-        // Enable or disable a single element by name
+
     public void SetEnabled(string elementName, bool enabled)
     {
         var el = GetElement(elementName);
-        if (el != null)
-            el.SetEnabled(enabled);
-    }
-
-    // Enable or disable ALL children of a container (like a toolbar)
-    public void SetChildrenEnabled(string containerName, bool enabled)
-    {
-        var root = GetElement(containerName);
-        if (root == null) return;
-
-        foreach (var child in root.Children())
-        {
-            child.SetEnabled(enabled);
-        }
+        el?.SetEnabled(enabled);
     }
 
     public void SetText(string elementName, string text)
@@ -500,10 +513,6 @@ public class UIToolkitBridge : MonoBehaviour
         if (el != null) el.text = text ?? string.Empty;
     }
 
-    public TextElement GetTextElement(string name) => _root?.Q<TextElement>(name);
-
-    public TextField GetTextField(string name) => _root?.Q<TextField>(name);
-
     public void SetVisible(string elementName, bool visible)
     {
         var el = GetElement(elementName);
@@ -511,6 +520,7 @@ public class UIToolkitBridge : MonoBehaviour
         el.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
+    // T
     public void ToggleClass(string elementName, string className, bool enabled)
     {
         var el = GetElement(elementName);
@@ -518,3 +528,4 @@ public class UIToolkitBridge : MonoBehaviour
         if (enabled) el.AddToClassList(className); else el.RemoveFromClassList(className);
     }
 }
+

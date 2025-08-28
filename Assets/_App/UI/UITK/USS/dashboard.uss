@@ -219,12 +219,12 @@
 }
 
 /* selected (active) state for any icon-btn */
-.icon-btn.selected { background-color: #f3c46c; }
+.icon-btn.selected { background-color: #f3c46c; color: #ffffff;}
 
 /* icons */
 .icon-btn.play  { background-image: url("project://database/Assets/_App/UI/UITK/Icons/play.png"); }
-.icon-btn.reset { background-image: url("project://database/Assets/_App/UI/UITK/Icons/reset.png"); }
-.icon-btn.stop  { background-image: url("project://database/Assets/_App/UI/UITK/Icons/stop.png"); }
+.icon-btn.pause { background-image: url("project://database/Assets/_App/UI/UITK/Icons/pause"); }
+.icon-btn.stop  { background-image: url("project://database/Assets/_App/UI/UITK/Icons/stop"); }
 
 /* --- language buttons --- */
 .lang-btn {
