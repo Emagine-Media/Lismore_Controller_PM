@@ -117,3 +117,5 @@ MonoBehaviour:
   - CLIENT_PLAY
   - STOP_ALL
   - PAUSE_ALL
+  - BTN_PLAY
+  - OpenDrawer

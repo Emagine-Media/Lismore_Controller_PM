@@ -53,5 +53,15 @@
                 <VisualElement class="video-placeholder mt-6" />
             </VisualElement>
         </VisualElement>
+        <VisualElement name="config-drawer" class="drawer">
+            <Label text="Username"/>
+            <TextField name="tf-username"/>
+            <Label text="Server URL"/>
+            <TextField name="tf-serverurl"/>
+            <Label text="Refresh Rate"/>
+            <TextField name="tf-refreshrate"/>
+            <Button name="btn-apply" text="Apply"/>
+            <Button name="btn-cancel" text="Cancel"/>
+        </VisualElement>
     </VisualElement>
 </UXML>

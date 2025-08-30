@@ -31,6 +31,7 @@ MonoBehaviour:
     assemblyNames:
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
+    - Kamgam.UIToolkitPlaymaker
     - PPv2URPConverters
     - JetBrains.Frontend.2022.2
     showAdvancedSettings: 0

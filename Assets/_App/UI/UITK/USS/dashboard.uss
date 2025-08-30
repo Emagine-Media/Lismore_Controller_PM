@@ -291,3 +291,18 @@
 .is-on { color: #22c55e; }
 .is-off { color: #ef4444; }
 .debug-border { outline: 2px solid #f00; }
+
+.drawer {
+    width: 400px;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    position: absolute;
+    right: -400px; /* off-screen */
+    transition: right 0.25s ease-in-out;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+}
+.drawer.open {
+    right: 0px; /* slide in */
+}
