@@ -89,6 +89,12 @@ MonoBehaviour:
       showInInspector: 0
       networkSync: 0
       value: 
+    - useVariable: 1
+      name: G_SelectedLanguage
+      tooltip: 
+      showInInspector: 0
+      networkSync: 0
+      value: EN
     vector2Variables: []
     vector3Variables: []
     colorVariables: []
@@ -102,7 +108,7 @@ MonoBehaviour:
     enumVariables: []
     categories:
     - 
-    variableCategoryIDs: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    variableCategoryIDs: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   events:
   - SERVER_OFF
   - SERVER_ON
@@ -119,3 +125,16 @@ MonoBehaviour:
   - PAUSE_ALL
   - BTN_PLAY
   - OpenDrawer
+  - DO_OPEN
+  - DO_CLOSE
+  - EVT_LanguageChanged
+  - CloseDrawer
+  - EVT_CardLangClicked
+  - CLIENT_LANG
+  - CLIENT_PLAY_ALL
+  - EVT_RX_STRING
+  - EVT_UI_SEND
+  - FM_SERVER_LIVE
+  - FM_HEADSET_JOINED
+  - CLIENT_ADDED
+  - CLIENT_REMOVED

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6b16dc7c203450459bb86e24305f9ca, type: 3}
+  m_Name: ES3GlobalReferences
+  m_EditorClassIdentifier: Assembly-CSharp-firstpass::ES3Internal.ES3GlobalReferences
+  refId:
+    _Keys:
+    - {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+    - {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+    - {fileID: 11500000, guid: 5e7f01c05f0674cfc872b404738b3677, type: 3}
+    - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+    - {fileID: 11500000, guid: fac02e6b81e3b4e7ea7b6b9938711fb5, type: 3}
+    - {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+    - {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+    - {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+    - {fileID: 10910, guid: 0000000000000000f000000000000000, type: 0}
+    - {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+    - {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
+    - {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+    - {fileID: 10906, guid: 0000000000000000f000000000000000, type: 0}
+    - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    - {fileID: 11500000, guid: 2f68ecff929c04b31832e383f4dfe4fd, type: 3}
+    - {fileID: 11500000, guid: 45c27f151479e4b4c8bdadb847566952, type: 3}
+    - {fileID: 11500000, guid: 64d1a9a5ffdb34815b4b8ec3cd1997c7, type: 3}
+    _Values: 9e93ec5a468666716bfad331a5c2a67076e5d172d74fd522ee76d223497aba795e1c010865ffb7300819bc126591676604d57138f421c636b78772883b70c6373b08a3d3c57f383473d547ae968d110afec377db1e651d4270bdaf7f71a50454d682af0b73488132df27961ea1ce5b512a5597d12c255e31ab31150f4eaf6e60bcc0d3cf8ce34e28b5ca35f17dc11335

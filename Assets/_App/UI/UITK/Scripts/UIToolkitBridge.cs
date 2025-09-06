@@ -115,11 +115,12 @@ public class UIToolkitBridge : MonoBehaviour
 
             // initial icon graphic
             ApplyIcon(btnPlay, "play");
+            ApplyIcon(btnStop, "stop");
 
             var idPlay = btnPlay.name; btnPlay.clicked += () => _buttonClicks.Add(idPlay);
             var idStop = btnStop.name; btnStop.clicked += () => _buttonClicks.Add(idStop);
 
-            btnGroup.Add(btnPlay);
+            btnGroup.Add(btnPlay);btnGroup.Add(btnStop);
 
             var langGroup = new VisualElement { name = $"langGroup_{uuid}" }; langGroup.AddToClassList("btn-group");
 
@@ -455,6 +456,13 @@ public class UIToolkitBridge : MonoBehaviour
     public void SetClientPlaySelected(string uuid, bool on, string selectedClass = "selected")
     {
         var btn = _root?.Q<Button>($"btnPlay_{uuid}");
+        if (btn == null) return;
+        if (on) btn.AddToClassList(selectedClass); else btn.RemoveFromClassList(selectedClass);
+    }
+    
+       public void SetClientStopSelected(string uuid, bool on, string selectedClass = "selected")
+    {
+        var btn = _root?.Q<Button>($"btnSrop_{uuid}");
         if (btn == null) return;
         if (on) btn.AddToClassList(selectedClass); else btn.RemoveFromClassList(selectedClass);
     }
