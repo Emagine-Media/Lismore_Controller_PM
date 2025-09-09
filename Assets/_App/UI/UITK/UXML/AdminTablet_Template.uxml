@@ -1,0 +1,167 @@
+<UXML xmlns="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_App/UI/UITK/USS/_theme-dark.uss?fileID=7433441132597879392&amp;guid=2e8cd1831193ed248bdd40d30dc813dd&amp;type=3#_theme-dark" />
+    <Style src="project://database/Assets/_App/UI/UITK/USS/dashboard.uss?fileID=7433441132597879392&amp;guid=25bb66d0badb81444a4ef82e14d06f21&amp;type=3#dashboard" />
+    <VisualElement class="app-root">
+                <VisualElement class="tablet-right">
+            <VisualElement class="profile card">
+                <VisualElement class="avatar-wrap">
+                    <VisualElement class="avatar" />
+                </VisualElement>
+                <Label name="lblMovie" text="[movie name]" class="name text-m mt-8" />
+                <Label name="lblVersion" text=" [version]" class="role mt-8" />
+                <Label name="lblLanguage" text="[lang]" class="hint mt-6" />
+                <Label text="[server status]" name="lblServer" focusable="true" class="title text-l" />
+            </VisualElement>
+            <VisualElement class="reports card mt-24">
+                <VisualElement class="stat-row">
+                    <Label text="3" class="stat-big" />
+                </VisualElement>
+                <VisualElement class="progress mt-12">
+                    <Label text="Playtime Left - 5:05" class="hint" />
+                    <VisualElement class="track mt-6">
+                        <VisualElement class="fill w-69p" />
+                        <VisualElement class="wave" />
+                    </VisualElement>
+                </VisualElement>
+            </VisualElement>
+            <VisualElement class="reports card mt-24">
+                <Label text="Experience Control" class="title text-l" />
+                <VisualElement class="quick-grid mt-12">
+                    <VisualElement class="qbtn">
+                        <Label text="Play All " />
+                    </VisualElement>
+                    <VisualElement class="qbtn hstack-12">
+                        <Label text="Pause All" />
+                    </VisualElement>
+                    <VisualElement class="qbtn hstack-12">
+                        <Label text="Stop All" />
+                    </VisualElement>
+                </VisualElement>
+                <Label text="Default Language" class="title text-l mt-12" />
+                <VisualElement class="quick-grid mt-12 btn-group">
+                    <Button name="btnLangEN" text="EN" class="qbtn lang-btn ml-0" />
+                    <Button name="btnLangFR" text="FR" class="qbtn lang-btn" />
+                    <Button name="btnLangIL" text="IL" class="qbtn lang-btn" />
+                    <Button name="btnLangES" text="ES" class="qbtn lang-btn" />
+                </VisualElement>
+            </VisualElement>
+            <VisualElement class="chart-block card mt-24">
+                <VisualElement class="card-header">
+                    <Label text="Now Playing" class="title text-l" />
+                    <VisualElement class="icon-ghost" />
+                </VisualElement>
+                <VisualElement class="video-placeholder mt-6" />
+            </VisualElement>
+        </VisualElement>
+        <VisualElement class="tablet-left">
+            <VisualElement class="issues card">
+                <VisualElement class="card-header">
+                    <Label text="Headsets Connected" class="title text-l" />
+                    <VisualElement class="icon-ghost" />
+                    <Label text="10" name="lblClients" class="title text-l" />
+                </VisualElement>
+                <VisualElement class="issue-row is-active mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon active" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 1" class="row-title" />
+                            <Label text="Connected" class="row-sub active mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <VisualElement class="btn-group">
+                            <Button class="icon-btn play selected ml-0" />
+                            <Button class="icon-btn reset" />
+                            <Button class="icon-btn stop" />
+                        </VisualElement>
+                        <VisualElement class="group-spacer" />
+                        <VisualElement class="btn-group">
+                            <Button text="EN" class="lang-btn ml-0" />
+                            <Button text="FR" class="lang-btn selected" />
+                            <Button text="IL" class="lang-btn" />
+                            <Button text="ES" class="lang-btn" />
+                        </VisualElement>
+                        <Label text="85%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-active mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon active" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 2" class="row-title" />
+                            <Label text="Connected" class="row-sub active mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <VisualElement class="btn-group">
+                            <Button class="icon-btn play selected ml-0" />
+                            <Button class="icon-btn reset" />
+                            <Button class="icon-btn stop" />
+                        </VisualElement>
+                        <VisualElement class="group-spacer" />
+                        <VisualElement class="btn-group">
+                            <Button text="EN" class="lang-btn selected ml-0" />
+                            <Button text="FR" class="lang-btn" />
+                            <Button text="IL" class="lang-btn" />
+                            <Button text="ES" class="lang-btn" />
+                        </VisualElement>
+                        <Label text="85%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-error mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon error" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 3" class="row-title" />
+                            <Label text="Connecting" class="row-sub error mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <Label text="85%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-active mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon active" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 4" class="row-title" />
+                            <Label text="Connected" class="row-sub active mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <VisualElement class="btn-group">
+                            <Button class="icon-btn play selected ml-0" />
+                            <Button class="icon-btn reset" />
+                            <Button class="icon-btn stop" />
+                        </VisualElement>
+                        <VisualElement class="group-spacer" />
+                        <VisualElement class="btn-group">
+                            <Button text="EN" class="lang-btn selected ml-0" />
+                            <Button text="FR" class="lang-btn" />
+                            <Button text="IL" class="lang-btn" />
+                            <Button text="ES" class="lang-btn" />
+                        </VisualElement>
+                        <Label text="85%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+                <VisualElement class="issue-row is-disconnected mt-12">
+                    <VisualElement class="hstack">
+                        <VisualElement class="issue-icon disconnected" />
+                        <VisualElement class="issue-copy ml-12">
+                            <Label text="Headset 5" class="row-title" />
+                            <Label text="Disconnected" class="row-sub disconnected mt-2" />
+                        </VisualElement>
+                    </VisualElement>
+                    <VisualElement class="flex-spacer" />
+                    <VisualElement class="hstack buttons-right">
+                        <Label text="0%" class="battery ml-12" />
+                    </VisualElement>
+                </VisualElement>
+            </VisualElement>
+        </VisualElement>
+    </VisualElement>
+</UXML>
