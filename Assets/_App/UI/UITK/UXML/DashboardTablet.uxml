@@ -10,19 +10,6 @@
                     <Label text="Playtime Left - 5:05" class="hint" />
                 </VisualElement>
                 <VisualElement name="clientsList" class="clients-list" />
-                <VisualElement class="issue-row is-disconnected mt-12">
-                    <VisualElement class="hstack">
-                        <VisualElement class="issue-icon disconnected" />
-                        <VisualElement class="issue-copy ml-12">
-                            <Label text="Headset 5" class="row-title" />
-                            <Label text="Disconnected" class="row-sub disconnected mt-2" />
-                        </VisualElement>
-                    </VisualElement>
-                    <VisualElement class="flex-spacer" />
-                    <VisualElement class="hstack buttons-right">
-                        <Label text="0%" class="battery ml-12" />
-                    </VisualElement>
-                </VisualElement>
             </VisualElement>
         </VisualElement>
         <VisualElement class="tablet-right">
@@ -54,14 +41,14 @@
             </VisualElement>
         </VisualElement>
         <VisualElement name="config-drawer" class="drawer">
-            <Label text="Username"/>
-            <TextField name="tf-username"/>
-            <Label text="Server URL"/>
-            <TextField name="tf-serverurl"/>
-            <Label text="Refresh Rate"/>
-            <TextField name="tf-refreshrate"/>
-            <Button name="btn-apply" text="Apply"/>
-            <Button name="btn-cancel" text="Cancel"/>
+            <Label text="Username" />
+            <TextField name="tf-username" />
+            <Label text="Server URL" />
+            <TextField name="tf-serverurl" />
+            <Label text="Refresh Rate" />
+            <TextField name="tf-refreshrate" />
+            <Button name="btn-apply" text="Apply" />
+            <Button name="btn-cancel" text="Cancel" />
         </VisualElement>
     </VisualElement>
 </UXML>

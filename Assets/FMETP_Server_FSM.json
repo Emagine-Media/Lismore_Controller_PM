@@ -1,0 +1,668 @@
+{
+    "items": [
+        {
+            "gameObject": "FMETP_Server",
+            "fsmName": "FSM_ToClients",
+            "startState": "Listen",
+            "globalTransitions": [],
+            "events": [
+                "PLAY_ALL",
+                "FINISHED",
+                "CLIENT_PLAY",
+                "CLIENT_JOINED",
+                "UPDATE",
+                "ADD",
+                "CHECK",
+                "DONE",
+                "FOUND",
+                "NEXT",
+                "NOT_FOUND"
+            ],
+            "states": [
+                {
+                    "name": "Listen",
+                    "actions": [
+                        "GetComponent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "PLAY_ALL",
+                            "toState": "DoSend"
+                        },
+                        {
+                            "eventName": "CLIENT_JOINED",
+                            "toState": "Join_Parse"
+                        },
+                        {
+                            "eventName": "CLIENT_PLAY",
+                            "toState": "Play_Parse"
+                        }
+                    ]
+                },
+                {
+                    "name": "DoSend",
+                    "actions": [
+                        "SetStringValue",
+                        "CallMethod",
+                        "DebugLog"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "Join_Parse",
+                    "actions": [
+                        "GetEventInfo",
+                        "StringSplit",
+                        "ArrayGet",
+                        "ArrayGet",
+                        "ArrayGet"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Join Store"
+                        }
+                    ]
+                },
+                {
+                    "name": "Join Store",
+                    "actions": [
+                        "ArrayContains",
+                        "BoolTest"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "UPDATE",
+                            "toState": "Join Update"
+                        },
+                        {
+                            "eventName": "ADD",
+                            "toState": "Join Add"
+                        }
+                    ]
+                },
+                {
+                    "name": "Join Add",
+                    "actions": [
+                        "ArrayAdd",
+                        "ArrayAdd"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "Join Update",
+                    "actions": [
+                        "ArrayGetNext"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CHECK",
+                            "toState": "Join Check"
+                        },
+                        {
+                            "eventName": "DONE",
+                            "toState": "Join Add"
+                        }
+                    ]
+                },
+                {
+                    "name": "Join Check",
+                    "actions": [
+                        "StringCompare"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FOUND",
+                            "toState": "Join Set"
+                        },
+                        {
+                            "eventName": "NEXT",
+                            "toState": "Join Next"
+                        }
+                    ]
+                },
+                {
+                    "name": "Join Next",
+                    "actions": [
+                        "ArrayGetNext"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CHECK",
+                            "toState": "Join Check"
+                        },
+                        {
+                            "eventName": "DONE",
+                            "toState": "Join Add"
+                        }
+                    ]
+                },
+                {
+                    "name": "Join Set",
+                    "actions": [
+                        "ArraySet"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "Play_Parse",
+                    "actions": [
+                        "GetEventInfo",
+                        "StringSplit",
+                        "ArrayGet",
+                        "ArrayGet",
+                        "FormatString"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "FindIndex_Start"
+                        }
+                    ]
+                },
+                {
+                    "name": "FindIndex_Start",
+                    "actions": [
+                        "ArrayGetNext"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CHECK",
+                            "toState": "FindIndex_Check"
+                        },
+                        {
+                            "eventName": "NOT_FOUND",
+                            "toState": "Play_Broadcast"
+                        }
+                    ]
+                },
+                {
+                    "name": "FindIndex_Check",
+                    "actions": [
+                        "StringCompare"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FOUND",
+                            "toState": "Play_SendTarget"
+                        },
+                        {
+                            "eventName": "NEXT",
+                            "toState": "FindIndex_Next"
+                        }
+                    ]
+                },
+                {
+                    "name": "Play_Broadcast",
+                    "actions": [
+                        "PM_FMETP_SendTextToAllClients",
+                        "DebugLog"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "Play_SendTarget",
+                    "actions": [
+                        "ArrayGet",
+                        "CallMethod",
+                        "DebugLog"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "FindIndex_Next",
+                    "actions": [
+                        "ArrayGetNext"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CHECK",
+                            "toState": "FindIndex_Check"
+                        },
+                        {
+                            "eventName": "NOT_FOUND",
+                            "toState": "Play_SendTarget"
+                        }
+                    ]
+                }
+            ],
+            "variables": {
+                "bools": [
+                    "L_Exists"
+                ],
+                "ints": [
+                    "L_Index"
+                ],
+                "floats": [],
+                "strings": [
+                    "L_Payload",
+                    "L_UUID",
+                    "L_Command",
+                    "L_Message",
+                    "L_Name",
+                    "L_IP",
+                    "L_CurrentUUID"
+                ],
+                "vectors": [],
+                "colors": [],
+                "objects": [
+                    "L_Server"
+                ],
+                "arrays": [
+                    "L_Parts",
+                    "KnownUUIDs",
+                    "KnownIPs"
+                ]
+            }
+        },
+        {
+            "gameObject": "FMETP_Server",
+            "fsmName": "FSM_ServerConfig",
+            "startState": "Init",
+            "globalTransitions": [],
+            "events": [
+                "EVT_Config_AddOrUpdate",
+                "EVT_Config_OnDisconnect",
+                "EVT_Config_QueryNameByUUID",
+                "EVT_Config_ReturnName",
+                "FINISHED",
+                "LoadArrays",
+                "CreateEmpty",
+                "EVT_IS_KNOWN",
+                "EVT_IS_NEW",
+                "EVT_NAME_SAME",
+                "EVT_NAME_DIFF",
+                "EVT_FAM_SAME",
+                "EVT_FAM_DIFF",
+                "EVT_ALREADY_ACTIVE",
+                "EVT_NOT_ACTIVE",
+                "EVT_FOUND",
+                "EVT_NOT_FOUND"
+            ],
+            "states": [
+                {
+                    "name": "Init",
+                    "actions": [
+                        "ES3FileCreate",
+                        "DebugLog"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "LoadOrInit"
+                        }
+                    ]
+                },
+                {
+                    "name": "LoadOrInit",
+                    "actions": [
+                        "ES3FileKeyExists"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "LoadArrays",
+                            "toState": "LoadArrays"
+                        },
+                        {
+                            "eventName": "CreateEmpty",
+                            "toState": "CreateEmpty"
+                        }
+                    ]
+                },
+                {
+                    "name": "CreateEmpty",
+                    "actions": [
+                        "ArrayClear",
+                        "ArrayClear",
+                        "ArrayClear",
+                        "ArrayClear",
+                        "ArrayClear",
+                        "ES3FileSave",
+                        "ES3FileSave",
+                        "ES3FileSave",
+                        "ES3FileSync"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "ListenAPI"
+                        }
+                    ]
+                },
+                {
+                    "name": "LoadArrays",
+                    "actions": [
+                        "ES3FileLoad",
+                        "ES3FileLoad",
+                        "ES3FileLoad",
+                        "ArrayClear"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "ListenAPI"
+                        }
+                    ]
+                },
+                {
+                    "name": "ListenAPI",
+                    "actions": [],
+                    "transitions": [
+                        {
+                            "eventName": "EVT_Config_AddOrUpdate",
+                            "toState": "AddOrUpdate"
+                        },
+                        {
+                            "eventName": "EVT_Config_OnDisconnect",
+                            "toState": "OnDisconnect"
+                        },
+                        {
+                            "eventName": "EVT_Config_QueryNameByUUID",
+                            "toState": "ReturnName"
+                        }
+                    ]
+                },
+                {
+                    "name": "AddOrUpdate",
+                    "actions": [
+                        "PM_FMETP_ListenForText",
+                        "DebugLog"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Parse"
+                        }
+                    ]
+                },
+                {
+                    "name": "OnDisconnect",
+                    "actions": [
+                        "GetEventInfo",
+                        "ArrayRemove"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "ListenAPI"
+                        }
+                    ]
+                },
+                {
+                    "name": "ReturnName",
+                    "actions": [
+                        "GetEventInfo",
+                        "ArrayContains"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "EVT_FOUND",
+                            "toState": "ReturnName_Found"
+                        },
+                        {
+                            "eventName": "EVT_NOT_FOUND",
+                            "toState": "ReturnName_Unknown"
+                        }
+                    ]
+                },
+                {
+                    "name": "UpdateExisting_GetIndex",
+                    "actions": [
+                        "ArrayGet"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "UpdateExisting_CheckName"
+                        }
+                    ]
+                },
+                {
+                    "name": "InsertNew",
+                    "actions": [
+                        "ArrayAdd",
+                        "ArrayAdd",
+                        "ArrayAdd",
+                        "ArrayAdd"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "SaveArrays"
+                        }
+                    ]
+                },
+                {
+                    "name": "SaveArrays",
+                    "actions": [
+                        "ES3FileSave",
+                        "ES3FileSave",
+                        "ES3FileSave",
+                        "ES3FileSync"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "ListenAPI"
+                        }
+                    ]
+                },
+                {
+                    "name": "UpdateExisting_CheckName",
+                    "actions": [
+                        "ArrayGet",
+                        "StringCompare"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "EVT_NAME_SAME",
+                            "toState": "UpdateExisting_CheckFamId"
+                        },
+                        {
+                            "eventName": "EVT_NAME_DIFF",
+                            "toState": "UpdateName"
+                        }
+                    ]
+                },
+                {
+                    "name": "UpdateExisting_CheckFamId",
+                    "actions": [
+                        "ArrayGet",
+                        "StringCompare"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "EVT_FAM_SAME",
+                            "toState": "EnsureActive"
+                        },
+                        {
+                            "eventName": "EVT_FAM_DIFF",
+                            "toState": "UpdateFamId"
+                        }
+                    ]
+                },
+                {
+                    "name": "UpdateName",
+                    "actions": [
+                        "ArraySet"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "UpdateExisting_CheckFamId"
+                        }
+                    ]
+                },
+                {
+                    "name": "EnsureActive",
+                    "actions": [
+                        "ArrayContains"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "EVT_ALREADY_ACTIVE",
+                            "toState": "SaveArrays"
+                        },
+                        {
+                            "eventName": "EVT_NOT_ACTIVE",
+                            "toState": "AddActive"
+                        }
+                    ]
+                },
+                {
+                    "name": "UpdateFamId",
+                    "actions": [
+                        "ArraySet"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "EnsureActive"
+                        }
+                    ]
+                },
+                {
+                    "name": "AddActive",
+                    "actions": [
+                        "ArrayAdd"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "SaveArrays"
+                        }
+                    ]
+                },
+                {
+                    "name": "ReturnName_Found",
+                    "actions": [
+                        "ArrayGet",
+                        "ArrayGet",
+                        "FormatString",
+                        "FormatString",
+                        "FormatString",
+                        "SetEventData",
+                        "SendEvent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "ListenAPI"
+                        }
+                    ]
+                },
+                {
+                    "name": "ReturnName_Unknown",
+                    "actions": [
+                        "SetStringValue",
+                        "SetEventData",
+                        "SendEvent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "ListenAPI"
+                        }
+                    ]
+                },
+                {
+                    "name": "Check Client",
+                    "actions": [
+                        "ArrayContains",
+                        "BoolTest"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "EVT_IS_KNOWN",
+                            "toState": "UpdateExisting_GetIndex"
+                        },
+                        {
+                            "eventName": "EVT_IS_NEW",
+                            "toState": "InsertNew"
+                        }
+                    ]
+                },
+                {
+                    "name": "Parse",
+                    "actions": [
+                        "DebugLog",
+                        "GetEventInfo",
+                        "StringSplit",
+                        "ArrayGet",
+                        "ArrayGet",
+                        "ArrayGet"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Check Client"
+                        }
+                    ]
+                }
+            ],
+            "variables": {
+                "bools": [
+                    "B_FileExists",
+                    "HasData?",
+                    "B_Exists",
+                    "B_IsActive"
+                ],
+                "ints": [
+                    "Len",
+                    "L_Index"
+                ],
+                "floats": [],
+                "strings": [
+                    "L_UUID",
+                    "L_Name",
+                    "L_FamId",
+                    "L_QueryUUID",
+                    "L_ReturnCsv",
+                    "FilePath",
+                    "UUIDs",
+                    "L_Entry",
+                    "OldName",
+                    "OldFam",
+                    "L_Payload"
+                ],
+                "vectors": [],
+                "colors": [],
+                "objects": [
+                    "V_ES3File"
+                ],
+                "arrays": [
+                    "A_UUIDs",
+                    "A_Names",
+                    "A_FamIds",
+                    "A_Active",
+                    "A_Parts"
+                ]
+            }
+        }
+    ]
+}
