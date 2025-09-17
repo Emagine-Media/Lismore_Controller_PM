@@ -1,0 +1,1173 @@
+{
+    "items": [
+        {
+            "gameObject": "UI_Dashboard",
+            "fsmName": "FSM_UIBinder",
+            "startState": "CacheBridge",
+            "globalTransitions": [],
+            "events": [
+                "FINISHED",
+                "HAS_VALUE",
+                "POLL AGAIN",
+                "SHOW_ON",
+                "SHOW_OFF",
+                "SERVER_ON",
+                "SERVER_OFF",
+                "BTN_PLAY"
+            ],
+            "states": [
+                {
+                    "name": "CacheBridge",
+                    "actions": [
+                        "GetComponent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Delay For Config"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delay For Config",
+                    "actions": [
+                        "Wait"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Check Version"
+                        },
+                        {
+                            "eventName": "SERVER_ON",
+                            "toState": "ShowOn"
+                        },
+                        {
+                            "eventName": "SERVER_OFF",
+                            "toState": "ShowOff"
+                        }
+                    ]
+                },
+                {
+                    "name": "Push Version",
+                    "actions": [
+                        "SetStringValue",
+                        "FormatString",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Push Name"
+                        }
+                    ]
+                },
+                {
+                    "name": "Done",
+                    "actions": [],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "CacheBridge"
+                        }
+                    ]
+                },
+                {
+                    "name": "Check Version",
+                    "actions": [
+                        "SetStringValue",
+                        "StringCompare"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "HAS_VALUE",
+                            "toState": "Push Version"
+                        },
+                        {
+                            "eventName": "POLL AGAIN",
+                            "toState": "Delay For Config"
+                        }
+                    ]
+                },
+                {
+                    "name": "Push Name",
+                    "actions": [
+                        "SetStringValue",
+                        "FormatString",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Push Lang"
+                        }
+                    ]
+                },
+                {
+                    "name": "Push Lang",
+                    "actions": [
+                        "SetStringValue",
+                        "FormatString",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Apply Current"
+                        }
+                    ]
+                },
+                {
+                    "name": "Apply Current",
+                    "actions": [
+                        "BoolTest"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "SHOW_ON",
+                            "toState": "ShowOn"
+                        },
+                        {
+                            "eventName": "SHOW_OFF",
+                            "toState": "ShowOff"
+                        }
+                    ]
+                },
+                {
+                    "name": "ShowOn",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Done"
+                        }
+                    ]
+                },
+                {
+                    "name": "ShowOff",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Done"
+                        }
+                    ]
+                }
+            ],
+            "variables": {
+                "bools": [
+                    "L_ServerIsOn"
+                ],
+                "ints": [],
+                "floats": [],
+                "strings": [
+                    "L_ServerOnStr",
+                    "L_ClientsStr",
+                    "L_MovieStr",
+                    "L_LangStr",
+                    "L_VersionStr",
+                    "L_TxtVersion",
+                    "L_TxtMovie",
+                    "L_TxtLang"
+                ],
+                "vectors": [],
+                "colors": [],
+                "objects": [
+                    "Bridge",
+                    "L_LblClients",
+                    "L_LblLanguage",
+                    "L_LblMovie",
+                    "L_LblServer",
+                    "L_LblVersion",
+                    "L_Root",
+                    "L_UIDocument"
+                ],
+                "arrays": []
+            }
+        },
+        {
+            "gameObject": "UI_Dashboard",
+            "fsmName": "FSM_LanguageButtons",
+            "startState": "CacheBridge",
+            "globalTransitions": [],
+            "events": [
+                "FINISHED",
+                "DONE_ITER",
+                "CHECK",
+                "APPLY_SELECTION",
+                "NEXT_LANG",
+                "BIND_ONE",
+                "DONE_BIND",
+                "ALLOW",
+                "BLOCK",
+                "EVT_LanguageChanged",
+                "CLIENT_LANG"
+            ],
+            "states": [
+                {
+                    "name": "CacheBridge",
+                    "actions": [],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "BuildUI"
+                        }
+                    ]
+                },
+                {
+                    "name": "BuildUI",
+                    "actions": [
+                        "Wait",
+                        "SetStringValue",
+                        "SetStringValue",
+                        "FormatString",
+                        "DebugLog",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "BindAllButtons"
+                        }
+                    ]
+                },
+                {
+                    "name": "IterateBind",
+                    "actions": [
+                        "SetBoolValue",
+                        "ArrayGetNext"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CHECK",
+                            "toState": "Gate_PlayAll"
+                        },
+                        {
+                            "eventName": "DONE_ITER",
+                            "toState": "AfterIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "CheckThisLanguage",
+                    "actions": [
+                        "StringReplace",
+                        "StringReplace",
+                        "StringReplace",
+                        "StringReplace",
+                        "FormatString",
+                        "CallMethod",
+                        "BoolTest"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "APPLY_SELECTION",
+                            "toState": "ApplySelection"
+                        },
+                        {
+                            "eventName": "NEXT_LANG",
+                            "toState": "IterateBind"
+                        }
+                    ]
+                },
+                {
+                    "name": "ApplySelection",
+                    "actions": [
+                        "SetStringValue",
+                        "SetStringValue",
+                        "FormatString",
+                        "SetEventData",
+                        "PM_FMETP_SendTextToAllClients",
+                        "SendEvent",
+                        "CallMethod",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "IterateBind"
+                        }
+                    ]
+                },
+                {
+                    "name": "StartIter",
+                    "actions": [
+                        "SetStringValue",
+                        "StringSplit",
+                        "ArrayGetNext"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CHECK",
+                            "toState": "CheckThisLanguage"
+                        },
+                        {
+                            "eventName": "DONE_ITER",
+                            "toState": "AfterIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "AfterIter",
+                    "actions": [
+                        "Wait"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "StartIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "BindAllButtons",
+                    "actions": [
+                        "SetStringValue",
+                        "StringSplit",
+                        "ArrayGetNext"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "BIND_ONE",
+                            "toState": "BindThis"
+                        },
+                        {
+                            "eventName": "DONE_BIND",
+                            "toState": "StartIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "BindThis",
+                    "actions": [
+                        "StringReplace",
+                        "StringReplace",
+                        "StringReplace",
+                        "StringReplace",
+                        "FormatString",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "IterateBind"
+                        }
+                    ]
+                },
+                {
+                    "name": "Gate_PlayAll",
+                    "actions": [
+                        "BoolTest"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "BLOCK",
+                            "toState": "StartIter"
+                        },
+                        {
+                            "eventName": "ALLOW",
+                            "toState": "CheckThisLanguage"
+                        }
+                    ]
+                }
+            ],
+            "variables": {
+                "bools": [
+                    "L_Clicked",
+                    "L_Reset"
+                ],
+                "ints": [],
+                "floats": [],
+                "strings": [
+                    "L_LangsCsv",
+                    "L_DefaultLang",
+                    "L_CurrentCode",
+                    "L_BtnName",
+                    "L_DebugStr",
+                    "SelectedLangLocal",
+                    "L_Payload"
+                ],
+                "vectors": [],
+                "colors": [],
+                "objects": [
+                    "Bridge"
+                ],
+                "arrays": [
+                    "L_ArrayLangs"
+                ]
+            }
+        },
+        {
+            "gameObject": "UI_Dashboard",
+            "fsmName": "FSM_ClientsLabels",
+            "startState": "CacheBridge",
+            "globalTransitions": [],
+            "events": [
+                "FINISHED",
+                "CLIENTS_CHANGED",
+                "CLIENT_ADDED",
+                "CLIENT_REMOVED"
+            ],
+            "states": [
+                {
+                    "name": "CacheBridge",
+                    "actions": [
+                        "GetComponent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "ApplyCurrent"
+                        }
+                    ]
+                },
+                {
+                    "name": "ApplyCurrent",
+                    "actions": [
+                        "FormatString",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "Listen",
+                    "actions": [
+                        "FormatString",
+                        "CallMethod",
+                        "PM_FMETP_ConnectDisconnectEvents"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CLIENT_ADDED",
+                            "toState": "AddOne"
+                        },
+                        {
+                            "eventName": "CLIENT_REMOVED",
+                            "toState": "RemoveOne"
+                        }
+                    ]
+                },
+                {
+                    "name": "AddOne",
+                    "actions": [
+                        "IntOperator",
+                        "FormatString",
+                        "CallMethod",
+                        "Wait"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "RemoveOne",
+                    "actions": [
+                        "IntOperator",
+                        "FormatString",
+                        "CallMethod",
+                        "IntClamp",
+                        "Wait"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                }
+            ],
+            "variables": {
+                "bools": [],
+                "ints": [
+                    "L_Count",
+                    "L_HeadsetIndex"
+                ],
+                "floats": [],
+                "strings": [
+                    "L_TxtClients",
+                    "L_Name",
+                    "L_Payload"
+                ],
+                "vectors": [],
+                "colors": [],
+                "objects": [
+                    "Bridge"
+                ],
+                "arrays": []
+            }
+        },
+        {
+            "gameObject": "UI_Dashboard",
+            "fsmName": "FSM_ClientCards",
+            "startState": "CacheBridge",
+            "globalTransitions": [],
+            "events": [
+                "CLIENTS_CHANGED",
+                "FINISHED",
+                "PULSE_DONE",
+                "PLAY_ALL",
+                "LOCK_NEW",
+                "CLIENT_ADDED",
+                "CLIENT_REMOVED",
+                "EVT_Config_ReturnName",
+                "EVT_Config_AddOrUpdate",
+                "EVT_Config_OnDisconnect"
+            ],
+            "states": [
+                {
+                    "name": "CacheBridge",
+                    "actions": [
+                        "GetComponent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "Listen",
+                    "actions": [
+                        "PM_FMETP_ConnectDisconnectEvents"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CLIENT_ADDED",
+                            "toState": "onJoined"
+                        },
+                        {
+                            "eventName": "CLIENT_REMOVED",
+                            "toState": "onLeft"
+                        }
+                    ]
+                },
+                {
+                    "name": "onJoined",
+                    "actions": [
+                        "PM_FMETP_SendTextToAllClients",
+                        "PM_FMETP_ListenForText",
+                        "DebugLog"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "PULSE_DONE",
+                            "toState": "Parse"
+                        }
+                    ]
+                },
+                {
+                    "name": "onLeft",
+                    "actions": [
+                        "FormatString",
+                        "CallMethod",
+                        "CallMethod",
+                        "Wait"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "PULSE_DONE",
+                            "toState": "FetchLeftIP"
+                        }
+                    ]
+                },
+                {
+                    "name": "LeaveCommit",
+                    "actions": [
+                        "CallMethod",
+                        "IntOperator",
+                        "IntClamp",
+                        "SetIntValue",
+                        "SendEvent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "JoinCommit",
+                    "actions": [
+                        "FormatString",
+                        "SetEventData",
+                        "CallMethod",
+                        "CallMethod",
+                        "IntOperator",
+                        "SetIntValue",
+                        "PM_FMETP_SendTextToTarget",
+                        "SendEvent",
+                        "SendEvent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "Parse",
+                    "actions": [
+                        "StringSplit",
+                        "ArrayGet",
+                        "ArrayGet",
+                        "ArrayGet",
+                        "CallMethod",
+                        "FormatString",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "ArrayAdd",
+                        "ArrayAdd"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "JoinCommit"
+                        }
+                    ]
+                },
+                {
+                    "name": "FetchLeftIP",
+                    "actions": [
+                        "SetStringValue"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "LeaveCommit"
+                        }
+                    ]
+                }
+            ],
+            "variables": {
+                "bools": [],
+                "ints": [
+                    "L_Count"
+                ],
+                "floats": [],
+                "strings": [
+                    "L_Payload",
+                    "L_UUID",
+                    "L_Name",
+                    "L_TitleEl",
+                    "L_ElCard",
+                    "L_ElIcon",
+                    "L_ElSub",
+                    "L_SubEl",
+                    "L_IP",
+                    "L_FamId",
+                    "L_LeftIP",
+                    "L_Return"
+                ],
+                "vectors": [],
+                "colors": [],
+                "objects": [
+                    "Bridge"
+                ],
+                "arrays": [
+                    "L_Parts",
+                    "A_IPs",
+                    "A_UUIDsByIP"
+                ]
+            }
+        },
+        {
+            "gameObject": "UI_Dashboard",
+            "fsmName": "FSM_AllCardsControls",
+            "startState": "CacheBridge",
+            "globalTransitions": [],
+            "events": [
+                "PLAY_ALL",
+                "FINISHED",
+                "Do_PlayAll",
+                "PAUSE_ALL",
+                "STOP_ALL",
+                "LOOP",
+                "BLOCK",
+                "ALLOW",
+                "RESET_UI",
+                "EVT_NoLang",
+                "EVT_HasLang",
+                "CLIENT_PLAY_ALL",
+                "EVT_RX_STRING"
+            ],
+            "states": [
+                {
+                    "name": "CacheBridge",
+                    "actions": [
+                        "GetComponent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "InitUI"
+                        }
+                    ]
+                },
+                {
+                    "name": "Listen",
+                    "actions": [
+                        "CallMethod",
+                        "BoolTest",
+                        "CallMethod",
+                        "BoolTest",
+                        "CallMethod",
+                        "BoolTest",
+                        "Wait"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "PLAY_ALL",
+                            "toState": "DoPlayAll"
+                        },
+                        {
+                            "eventName": "PAUSE_ALL",
+                            "toState": "DoPauseAll"
+                        },
+                        {
+                            "eventName": "STOP_ALL",
+                            "toState": "DoStopAll"
+                        },
+                        {
+                            "eventName": "LOOP",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "DoPlayAll",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "FormatString"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "BuildPayload"
+                        }
+                    ]
+                },
+                {
+                    "name": "DoPauseAll",
+                    "actions": [
+                        "SetBoolValue",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "FormatString"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "BuildPayload"
+                        }
+                    ]
+                },
+                {
+                    "name": "DoStopAll",
+                    "actions": [
+                        "SetBoolValue",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "Wait",
+                        "FormatString"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "RESET_UI",
+                            "toState": "ResetAfterStop"
+                        }
+                    ]
+                },
+                {
+                    "name": "BindButtons",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "OnLanguageChanged"
+                        }
+                    ]
+                },
+                {
+                    "name": "InitUI",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "BindButtons"
+                        }
+                    ]
+                },
+                {
+                    "name": "ResetAfterStop",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod",
+                        "CallMethod"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "BuildPayload"
+                        }
+                    ]
+                },
+                {
+                    "name": "OnLanguageChanged",
+                    "actions": [
+                        "SetStringValue"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                },
+                {
+                    "name": "BuildPayload",
+                    "actions": [
+                        "PM_FMETP_SendTextToAllClients",
+                        "DebugLog",
+                        "SendEvent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Listen"
+                        }
+                    ]
+                }
+            ],
+            "variables": {
+                "bools": [
+                    "L_Clicked"
+                ],
+                "ints": [
+                    "L_NumCards",
+                    "LangLen"
+                ],
+                "floats": [],
+                "strings": [
+                    "CurrentLang",
+                    "DefaultLang",
+                    "PlayAllPayload",
+                    "L_Payload"
+                ],
+                "vectors": [],
+                "colors": [],
+                "objects": [
+                    "Bridge"
+                ],
+                "arrays": []
+            }
+        },
+        {
+            "gameObject": "UI_Dashboard",
+            "fsmName": "FSM_OneCardControls",
+            "startState": "CacheBridge",
+            "globalTransitions": [],
+            "events": [
+                "CLIENT_PLAY",
+                "FINISHED",
+                "CHECK",
+                "DO_PLAY_ONE",
+                "NEXT",
+                "IDEL_DELAY",
+                "DO_PAUSE_ONE",
+                "DO_STOP_ONE",
+                "StartIter",
+                "DONE_ITER",
+                "CLICKED",
+                "PAUSE_CLICKED",
+                "PLAY_CLICKED",
+                "EVT_CardLangClicked",
+                "EVT_UseOverride",
+                "EVT_UseDefault",
+                "CLIENT_LANG"
+            ],
+            "states": [
+                {
+                    "name": "CacheBridge",
+                    "actions": [
+                        "GetComponent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Poll"
+                        }
+                    ]
+                },
+                {
+                    "name": "Poll",
+                    "actions": [
+                        "CallMethod",
+                        "StringSplit"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "RefreshUUIDs"
+                        }
+                    ]
+                },
+                {
+                    "name": "PlayOne",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "FormatString",
+                        "PM_FMETP_SendTextToAllClients"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "StartIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "IdleDelay",
+                    "actions": [
+                        "Wait"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "Poll"
+                        }
+                    ]
+                },
+                {
+                    "name": "PauseOne",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "FormatString",
+                        "SetEventData",
+                        "SendEvent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "StartIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "StopOne",
+                    "actions": [
+                        "CallMethod",
+                        "CallMethod",
+                        "FormatString",
+                        "PM_FMETP_SendTextToAllClients"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "StartIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "StartIter",
+                    "actions": [
+                        "ArrayGetNext"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CHECK",
+                            "toState": "CheckOne"
+                        },
+                        {
+                            "eventName": "DONE_ITER",
+                            "toState": "IdleDelay"
+                        }
+                    ]
+                },
+                {
+                    "name": "RefreshUUIDs",
+                    "actions": [
+                        "CallMethod",
+                        "StringSplit"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "FINISHED",
+                            "toState": "StartIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "CheckOne",
+                    "actions": [
+                        "ArrayContains",
+                        "FormatString",
+                        "CallMethod",
+                        "BoolTest",
+                        "FormatString",
+                        "CallMethod",
+                        "BoolTest",
+                        "FormatString",
+                        "CallMethod",
+                        "BoolTest",
+                        "BoolTest",
+                        "NextFrameEvent"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "DO_STOP_ONE",
+                            "toState": "StopOne"
+                        },
+                        {
+                            "eventName": "PAUSE_CLICKED",
+                            "toState": "BranchPause"
+                        },
+                        {
+                            "eventName": "PLAY_CLICKED",
+                            "toState": "BranchPlay"
+                        },
+                        {
+                            "eventName": "CHECK",
+                            "toState": "StartIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "BranchPause",
+                    "actions": [
+                        "BoolTest"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "DO_PAUSE_ONE",
+                            "toState": "PauseOne"
+                        },
+                        {
+                            "eventName": "CHECK",
+                            "toState": "StartIter"
+                        }
+                    ]
+                },
+                {
+                    "name": "BranchPlay",
+                    "actions": [
+                        "BoolTest"
+                    ],
+                    "transitions": [
+                        {
+                            "eventName": "CHECK",
+                            "toState": "StartIter"
+                        },
+                        {
+                            "eventName": "DO_PLAY_ONE",
+                            "toState": "PlayOne"
+                        },
+                        {
+                            "eventName": "DO_STOP_ONE",
+                            "toState": "StopOne"
+                        }
+                    ]
+                }
+            ],
+            "variables": {
+                "bools": [
+                    "L_Clicked",
+                    "L_IsPlaying",
+                    "CHECK",
+                    "Checked",
+                    "UNCHECKED"
+                ],
+                "ints": [
+                    "L_Index"
+                ],
+                "floats": [],
+                "strings": [
+                    "L_UUIDsCsv",
+                    "L_UUID",
+                    "L_BtnName",
+                    "L_Payload",
+                    "L_Csv",
+                    "ClickedLang"
+                ],
+                "vectors": [],
+                "colors": [],
+                "objects": [
+                    "Bridge",
+                    "L_Btn"
+                ],
+                "arrays": [
+                    "KnownUUIDs",
+                    "A_Playing",
+                    "L_Parts"
+                ]
+            }
+        }
+    ]
+}
