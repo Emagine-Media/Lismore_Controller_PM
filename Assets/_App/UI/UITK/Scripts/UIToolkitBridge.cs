@@ -43,20 +43,19 @@ public class UIToolkitBridge : MonoBehaviour
     private readonly HashSet<string> _buttonClicks = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _fieldChanges = new(StringComparer.Ordinal);
 
+    private readonly HashSet<string> _requestedButtons = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _pendingButtons = new(StringComparer.Ordinal);
     private readonly HashSet<string> _boundButtons = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _scheduledButtonBinds = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, int> _buttonBindAttempts = new(StringComparer.Ordinal);
 
+    private readonly HashSet<string> _requestedDropdowns = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _pendingDropdowns = new(StringComparer.Ordinal);
     private readonly HashSet<string> _boundDropdowns = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _scheduledDropdownBinds = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, int> _dropdownBindAttempts = new(StringComparer.Ordinal);
 
+    private readonly HashSet<string> _requestedTextFields = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _pendingTextFields = new(StringComparer.Ordinal);
     private readonly HashSet<string> _boundTextFields = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _scheduledTextFieldBinds = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, int> _textFieldBindAttempts = new(StringComparer.Ordinal);
 
-    private const int MaxBindRetries = 30;
-    private const long BindRetryDelayMs = 100;
+    private bool _geometryWatcherActive;
 
     // Per-UUID language cache (if you ever decide to store per-device langs)
     private readonly Dictionary<string, string> _langsCsvByUuid = new(StringComparer.OrdinalIgnoreCase);
@@ -80,18 +79,43 @@ public class UIToolkitBridge : MonoBehaviour
     private void OnEnable()
     {
         TryResolveRoot();
+        ProcessPendingBindings();
+    }
+
+    private void OnDisable()
+    {
+        DetachGeometryWatcher();
     }
 
     private bool TryResolveRoot()
     {
-        if (_root != null)
-            return true;
-
         if (uiDocument == null)
             uiDocument = GetComponent<UIDocument>();
 
-        _root = uiDocument != null ? uiDocument.rootVisualElement : null;
-        return _root != null;
+        var newRoot = uiDocument != null ? uiDocument.rootVisualElement : null;
+
+        if (ReferenceEquals(newRoot, _root))
+        {
+            if (_root != null)
+            {
+                AttachGeometryWatcher();
+                ProcessPendingBindings();
+            }
+            return _root != null;
+        }
+
+        DetachGeometryWatcher();
+        _root = newRoot;
+
+        if (_root != null)
+        {
+            ResetBindingsForNewRoot();
+            AttachGeometryWatcher();
+            ProcessPendingBindings();
+            return true;
+        }
+
+        return false;
     }
 
     // ─────────────────────────────────────────────────────────────────────────────
@@ -249,55 +273,49 @@ public class UIToolkitBridge : MonoBehaviour
     public void BindButton(string elementName)
     {
         if (string.IsNullOrWhiteSpace(elementName)) return;
-        if (_boundButtons.Contains(elementName)) return;
-        if (!TryResolveRoot()) return;
 
-        var btn = GetButton(elementName);
-        if (btn != null)
+        _requestedButtons.Add(elementName);
+
+        if (TryResolveRoot() && TryBindButtonImmediate(elementName))
         {
-            if (_boundButtons.Add(elementName))
-                btn.clicked += () => _buttonClicks.Add(elementName);
-            _buttonBindAttempts.Remove(elementName);
+            _pendingButtons.Remove(elementName);
             return;
         }
 
-        ScheduleBindingRetry(elementName, BindButton, _scheduledButtonBinds, _buttonBindAttempts, "button");
+        _pendingButtons.Add(elementName);
+        AttachGeometryWatcher();
     }
 
     public void BindDropdown(string elementName)
     {
         if (string.IsNullOrWhiteSpace(elementName)) return;
-        if (_boundDropdowns.Contains(elementName)) return;
-        if (!TryResolveRoot()) return;
 
-        var dd = GetDropdown(elementName);
-        if (dd != null)
+        _requestedDropdowns.Add(elementName);
+
+        if (TryResolveRoot() && TryBindDropdownImmediate(elementName))
         {
-            if (_boundDropdowns.Add(elementName))
-                dd.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
-            _dropdownBindAttempts.Remove(elementName);
+            _pendingDropdowns.Remove(elementName);
             return;
         }
 
-        ScheduleBindingRetry(elementName, BindDropdown, _scheduledDropdownBinds, _dropdownBindAttempts, "dropdown");
+        _pendingDropdowns.Add(elementName);
+        AttachGeometryWatcher();
     }
 
     public void BindTextField(string elementName)
     {
         if (string.IsNullOrWhiteSpace(elementName)) return;
-        if (_boundTextFields.Contains(elementName)) return;
-        if (!TryResolveRoot()) return;
 
-        var tf = GetTextField(elementName);
-        if (tf != null)
+        _requestedTextFields.Add(elementName);
+
+        if (TryResolveRoot() && TryBindTextFieldImmediate(elementName))
         {
-            if (_boundTextFields.Add(elementName))
-                tf.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
-            _textFieldBindAttempts.Remove(elementName);
+            _pendingTextFields.Remove(elementName);
             return;
         }
 
-        ScheduleBindingRetry(elementName, BindTextField, _scheduledTextFieldBinds, _textFieldBindAttempts, "text field");
+        _pendingTextFields.Add(elementName);
+        AttachGeometryWatcher();
     }
 
     public void BuildLanguageButtonsForCard(string uuid, string languagesCsv, string defaultLang)
@@ -431,58 +449,26 @@ public class UIToolkitBridge : MonoBehaviour
         return _root.Q<TextField>(name);
     }
 
-    private void ScheduleBindingRetry(
-        string elementName,
-        Action<string> binder,
-        HashSet<string> scheduledSet,
-        Dictionary<string, int> attempts,
-        string elementType)
+    private void GuardLanguageContainers()
     {
-        if (binder == null || string.IsNullOrWhiteSpace(elementName)) return;
-        if (!TryResolveRoot()) return;
-        if (_root == null) return;
-
-        if (!scheduledSet.Add(elementName))
-            return;
-
-        int tries = attempts.TryGetValue(elementName, out var count) ? count : 0;
-        if (tries >= MaxBindRetries)
+        void Stop<T>(VisualElement ve) where T : EventBase<T>, new()
         {
-            scheduledSet.Remove(elementName);
-            attempts.Remove(elementName);
-            Debug.LogWarning($"UIToolkitBridge: Unable to bind {elementType} '{elementName}' after {tries} attempts.");
-            return;
+            ve?.RegisterCallback<T>(evt => evt.StopPropagation());
         }
 
-        attempts[elementName] = tries + 1;
-
-        _root.schedule.Execute(() =>
+        // Global bar
+        var global = GetElement("languagesBar");
+        if (global != null)
         {
-            scheduledSet.Remove(elementName);
-            binder(elementName);
-        }).StartingIn(BindRetryDelayMs);
-    }
+            Stop<PointerDownEvent>(global);
+            Stop<PointerUpEvent>(global);
+            Stop<ClickEvent>(global);
+        }
 
-    private void GuardLanguageContainers()
-{
-    void Stop<T>(VisualElement ve) where T : EventBase<T>, new()
-    {
-        ve?.RegisterCallback<T>(evt => evt.StopPropagation());
+        // Per-card groups: guard dynamically when created
+        // Call this right after you create langGroup_{uuid}
+        var _ = _root?.Query<VisualElement>(className: "btn-group");
     }
-
-    // Global bar
-    var global = GetElement("languagesBar");
-    if (global != null)
-    {
-        Stop<PointerDownEvent>(global);
-        Stop<PointerUpEvent>(global);
-        Stop<ClickEvent>(global);
-    }
-
-    // Per-card groups: guard dynamically when created
-    // Call this right after you create langGroup_{uuid}
-    var q = _root.Query<VisualElement>(className: "btn-group"); // or by name prefix if you prefer
-}
 
     // I
     public void InitTopIcons()
@@ -1455,5 +1441,117 @@ public void RefreshGlobalLanguageBar()
     {
         while (list.Count < len) list.Add(pad);
         if (list.Count > len) list.RemoveRange(len, list.Count - len);
+    }
+
+    private bool TryBindButtonImmediate(string elementName)
+    {
+        if (_boundButtons.Contains(elementName))
+            return true;
+
+        var btn = _root?.Q<Button>(elementName);
+        if (btn == null)
+            return false;
+
+        btn.clicked += () => _buttonClicks.Add(elementName);
+        _boundButtons.Add(elementName);
+        return true;
+    }
+
+    private bool TryBindDropdownImmediate(string elementName)
+    {
+        if (_boundDropdowns.Contains(elementName))
+            return true;
+
+        var dd = _root?.Q<DropdownField>(elementName);
+        if (dd == null)
+            return false;
+
+        dd.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
+        _boundDropdowns.Add(elementName);
+        return true;
+    }
+
+    private bool TryBindTextFieldImmediate(string elementName)
+    {
+        if (_boundTextFields.Contains(elementName))
+            return true;
+
+        var tf = _root?.Q<TextField>(elementName);
+        if (tf == null)
+            return false;
+
+        tf.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
+        _boundTextFields.Add(elementName);
+        return true;
+    }
+
+    private void ResetBindingsForNewRoot()
+    {
+        _boundButtons.Clear();
+        _boundDropdowns.Clear();
+        _boundTextFields.Clear();
+
+        _pendingButtons.Clear();
+        _pendingDropdowns.Clear();
+        _pendingTextFields.Clear();
+
+        foreach (var name in _requestedButtons) _pendingButtons.Add(name);
+        foreach (var name in _requestedDropdowns) _pendingDropdowns.Add(name);
+        foreach (var name in _requestedTextFields) _pendingTextFields.Add(name);
+    }
+
+    private void AttachGeometryWatcher()
+    {
+        if (_root == null || _geometryWatcherActive)
+            return;
+
+        _root.RegisterCallback<GeometryChangedEvent>(OnRootGeometryChanged);
+        _geometryWatcherActive = true;
+    }
+
+    private void DetachGeometryWatcher()
+    {
+        if (!_geometryWatcherActive || _root == null)
+            return;
+
+        _root.UnregisterCallback<GeometryChangedEvent>(OnRootGeometryChanged);
+        _geometryWatcherActive = false;
+    }
+
+    private void OnRootGeometryChanged(GeometryChangedEvent _)
+    {
+        ProcessPendingBindings();
+    }
+
+    private void ProcessPendingBindings()
+    {
+        if (_root == null)
+            return;
+
+        if (_pendingButtons.Count > 0)
+        {
+            foreach (var name in _pendingButtons.ToArray())
+                if (TryBindButtonImmediate(name))
+                    _pendingButtons.Remove(name);
+        }
+
+        if (_pendingDropdowns.Count > 0)
+        {
+            foreach (var name in _pendingDropdowns.ToArray())
+                if (TryBindDropdownImmediate(name))
+                    _pendingDropdowns.Remove(name);
+        }
+
+        if (_pendingTextFields.Count > 0)
+        {
+            foreach (var name in _pendingTextFields.ToArray())
+                if (TryBindTextFieldImmediate(name))
+                    _pendingTextFields.Remove(name);
+        }
+
+        if (_pendingButtons.Count == 0 && _pendingDropdowns.Count == 0 && _pendingTextFields.Count == 0)
+            DetachGeometryWatcher();
+        else
+            AttachGeometryWatcher();
     }
 }
