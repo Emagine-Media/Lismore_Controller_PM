@@ -43,6 +43,21 @@ public class UIToolkitBridge : MonoBehaviour
     private readonly HashSet<string> _buttonClicks = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _fieldChanges = new(StringComparer.Ordinal);
 
+    private readonly HashSet<string> _boundButtons = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _scheduledButtonBinds = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, int> _buttonBindAttempts = new(StringComparer.Ordinal);
+
+    private readonly HashSet<string> _boundDropdowns = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _scheduledDropdownBinds = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, int> _dropdownBindAttempts = new(StringComparer.Ordinal);
+
+    private readonly HashSet<string> _boundTextFields = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _scheduledTextFieldBinds = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, int> _textFieldBindAttempts = new(StringComparer.Ordinal);
+
+    private const int MaxBindRetries = 30;
+    private const long BindRetryDelayMs = 100;
+
     // Per-UUID language cache (if you ever decide to store per-device langs)
     private readonly Dictionary<string, string> _langsCsvByUuid = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _defaultLangByUuid = new(StringComparer.OrdinalIgnoreCase);
@@ -58,10 +73,25 @@ public class UIToolkitBridge : MonoBehaviour
     // ─────────────────────────────────────────────────────────────────────────────
     private void Awake()
     {
-        if (uiDocument == null) uiDocument = GetComponent<UIDocument>();
-        _root = uiDocument != null ? uiDocument.rootVisualElement : null;
-
+        TryResolveRoot();
         LoadGlobalLanguagesFromPmConfig();
+    }
+
+    private void OnEnable()
+    {
+        TryResolveRoot();
+    }
+
+    private bool TryResolveRoot()
+    {
+        if (_root != null)
+            return true;
+
+        if (uiDocument == null)
+            uiDocument = GetComponent<UIDocument>();
+
+        _root = uiDocument != null ? uiDocument.rootVisualElement : null;
+        return _root != null;
     }
 
     // ─────────────────────────────────────────────────────────────────────────────
@@ -218,24 +248,56 @@ public class UIToolkitBridge : MonoBehaviour
     // B
     public void BindButton(string elementName)
     {
+        if (string.IsNullOrWhiteSpace(elementName)) return;
+        if (_boundButtons.Contains(elementName)) return;
+        if (!TryResolveRoot()) return;
+
         var btn = GetButton(elementName);
-        if (btn == null) return;
-        var id = elementName;
-        btn.clicked += () => _buttonClicks.Add(id);
+        if (btn != null)
+        {
+            if (_boundButtons.Add(elementName))
+                btn.clicked += () => _buttonClicks.Add(elementName);
+            _buttonBindAttempts.Remove(elementName);
+            return;
+        }
+
+        ScheduleBindingRetry(elementName, BindButton, _scheduledButtonBinds, _buttonBindAttempts, "button");
     }
 
     public void BindDropdown(string elementName)
     {
+        if (string.IsNullOrWhiteSpace(elementName)) return;
+        if (_boundDropdowns.Contains(elementName)) return;
+        if (!TryResolveRoot()) return;
+
         var dd = GetDropdown(elementName);
-        if (dd == null) return;
-        dd.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
+        if (dd != null)
+        {
+            if (_boundDropdowns.Add(elementName))
+                dd.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
+            _dropdownBindAttempts.Remove(elementName);
+            return;
+        }
+
+        ScheduleBindingRetry(elementName, BindDropdown, _scheduledDropdownBinds, _dropdownBindAttempts, "dropdown");
     }
 
     public void BindTextField(string elementName)
     {
+        if (string.IsNullOrWhiteSpace(elementName)) return;
+        if (_boundTextFields.Contains(elementName)) return;
+        if (!TryResolveRoot()) return;
+
         var tf = GetTextField(elementName);
-        if (tf == null) return;
-        tf.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
+        if (tf != null)
+        {
+            if (_boundTextFields.Add(elementName))
+                tf.RegisterValueChangedCallback(evt => _fieldChanges[elementName] = evt.newValue);
+            _textFieldBindAttempts.Remove(elementName);
+            return;
+        }
+
+        ScheduleBindingRetry(elementName, BindTextField, _scheduledTextFieldBinds, _textFieldBindAttempts, "text field");
     }
 
     public void BuildLanguageButtonsForCard(string uuid, string languagesCsv, string defaultLang)
@@ -324,14 +386,82 @@ public class UIToolkitBridge : MonoBehaviour
         return string.Join(",", uuids);
     }
 
-    public Button GetButton(string name) => _root?.Q<Button>(name);
-    public int GetChildCount(string containerName) => GetElement(containerName)?.childCount ?? 0;
-    public DropdownField GetDropdown(string name) => _root?.Q<DropdownField>(name);
-    public VisualElement GetElement(string name) => _root?.Q<VisualElement>(name);
-    public Label GetLabel(string name) => _root?.Q<Label>(name);
-    public VisualElement GetRoot() => _root;
-    public TextElement GetTextElement(string name) => _root?.Q<TextElement>(name);
-    public TextField GetTextField(string name) => _root?.Q<TextField>(name);
+    public Button GetButton(string name)
+    {
+        if (!TryResolveRoot() || string.IsNullOrEmpty(name)) return null;
+        return _root.Q<Button>(name);
+    }
+
+    public int GetChildCount(string containerName)
+        => GetElement(containerName)?.childCount ?? 0;
+
+    public DropdownField GetDropdown(string name)
+    {
+        if (!TryResolveRoot() || string.IsNullOrEmpty(name)) return null;
+        return _root.Q<DropdownField>(name);
+    }
+
+    public VisualElement GetElement(string name)
+    {
+        if (!TryResolveRoot() || string.IsNullOrEmpty(name)) return null;
+        return _root.Q<VisualElement>(name);
+    }
+
+    public Label GetLabel(string name)
+    {
+        if (!TryResolveRoot() || string.IsNullOrEmpty(name)) return null;
+        return _root.Q<Label>(name);
+    }
+
+    public VisualElement GetRoot()
+    {
+        TryResolveRoot();
+        return _root;
+    }
+
+    public TextElement GetTextElement(string name)
+    {
+        if (!TryResolveRoot() || string.IsNullOrEmpty(name)) return null;
+        return _root.Q<TextElement>(name);
+    }
+
+    public TextField GetTextField(string name)
+    {
+        if (!TryResolveRoot() || string.IsNullOrEmpty(name)) return null;
+        return _root.Q<TextField>(name);
+    }
+
+    private void ScheduleBindingRetry(
+        string elementName,
+        Action<string> binder,
+        HashSet<string> scheduledSet,
+        Dictionary<string, int> attempts,
+        string elementType)
+    {
+        if (binder == null || string.IsNullOrWhiteSpace(elementName)) return;
+        if (!TryResolveRoot()) return;
+        if (_root == null) return;
+
+        if (!scheduledSet.Add(elementName))
+            return;
+
+        int tries = attempts.TryGetValue(elementName, out var count) ? count : 0;
+        if (tries >= MaxBindRetries)
+        {
+            scheduledSet.Remove(elementName);
+            attempts.Remove(elementName);
+            Debug.LogWarning($"UIToolkitBridge: Unable to bind {elementType} '{elementName}' after {tries} attempts.");
+            return;
+        }
+
+        attempts[elementName] = tries + 1;
+
+        _root.schedule.Execute(() =>
+        {
+            scheduledSet.Remove(elementName);
+            binder(elementName);
+        }).StartingIn(BindRetryDelayMs);
+    }
 
     private void GuardLanguageContainers()
 {
