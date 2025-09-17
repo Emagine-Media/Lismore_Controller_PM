@@ -5,23 +5,23 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class UITKSwipeDispatcher : MonoBehaviour
 {
-    [Tooltip("Minimum swipe distance in pixels before an event is fired.")]
+    [UnityEngine.Tooltip("Minimum swipe distance in pixels before an event is fired.")]
     public float minSwipeDistance = 120f;
 
-    [Tooltip("Fraction of screen width that counts as an activation edge.")]
+    [UnityEngine.Tooltip("Fraction of screen width that counts as an activation edge.")]
     [Range(0f, 0.5f)]
     public float activationEdgePercent = 0.2f;
 
-    [Tooltip("PlayMaker event sent when a swipe starts at the left edge and moves right.")]
+    [UnityEngine.Tooltip("PlayMaker event sent when a swipe starts at the left edge and moves right.")]
     public string swipeRightEvent = "SWIPE_RIGHT";
 
-    [Tooltip("PlayMaker event sent when a swipe starts at the right edge and moves left.")]
+    [UnityEngine.Tooltip("PlayMaker event sent when a swipe starts at the right edge and moves left.")]
     public string swipeLeftEvent = "SWIPE_LEFT";
 
-    [Tooltip("Optional event for upward swipes.")]
+    [UnityEngine.Tooltip("Optional event for upward swipes.")]
     public string swipeUpEvent = string.Empty;
 
-    [Tooltip("Optional event for downward swipes.")]
+    [UnityEngine.Tooltip("Optional event for downward swipes.")]
     public string swipeDownEvent = string.Empty;
 
     private UIDocument _document;
